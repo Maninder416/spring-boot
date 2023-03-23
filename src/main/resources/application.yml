@@ -1,0 +1,19 @@
+server:
+  port: 9000
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+      jdbc:
+        batch_size: 1000
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/employee
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
