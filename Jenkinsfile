@@ -1,8 +1,7 @@
 pipeline {
     agent any
     tools {
-            maven 'Maven 3.9.1'
-            jdk 'jdk8'
+            maven 'maven-test'
     }
     stages {
         stage('Build Create and Push Image') {
