@@ -21,7 +21,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public String findEmployeeById(Long id){
+    public String findEmployeeUsingId(Long id){
         Optional<Employee> employee= employeeRepository.findById(id);
         if(employee.isEmpty()){
             return "Employee not found for id: "+id;

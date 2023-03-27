@@ -3,7 +3,6 @@ package io.reactivestax.springboot.controller;
 import io.reactivestax.springboot.entity.Employee;
 import io.reactivestax.springboot.repository.EmployeeRepository;
 import io.reactivestax.springboot.service.EmployeeService;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -60,14 +59,13 @@ public class EmployeeControllerTests {
     public void deleteEmployee(){
        Employee employee = Employee.builder()
                 .id(2l)
-                .name("brijesh")
+                .name("tester")
                 .employment("dev")
                 .build();
 
         when(employeeRepository.findById(employee.getId()))
                 .thenReturn(Optional.of(employee));
         employeeService.deleteEmployeeById(employee.getId());
-        //verify(employeeRepository).deleteById(employee.getId());
     }
 
 

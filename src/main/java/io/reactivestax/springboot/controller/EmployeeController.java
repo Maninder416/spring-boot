@@ -19,7 +19,7 @@ public class EmployeeController {
     }
     @GetMapping("/employees/{id}"   )
     public ResponseEntity<String> getEmployeeById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(employeeService.findEmployeeById(id));
+        return ResponseEntity.ok(employeeService.findEmployeeUsingId(id));
     }
     @PostMapping("/employees")
     public ResponseEntity<Employee> employee(@RequestBody Employee employee){
