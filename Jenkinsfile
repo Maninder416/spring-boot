@@ -15,7 +15,7 @@ pipeline {
 
  		stage('Test'){
  			steps{
- 				sh "mvn test"
+ 				sh "docker build -it maninder40407/employee-jdbc ."
  			}
  		}
 
