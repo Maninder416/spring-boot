@@ -26,7 +26,7 @@ pipeline {
         stage('maven spring test case') {
             steps {
             withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
-                sh 'mvn test -DskipTests -Ddocker.username=$u -Ddocker.password=$p'
+                sh 'mvn test -Ddocker.username=$u -Ddocker.password=$p'
             }
 
             }
