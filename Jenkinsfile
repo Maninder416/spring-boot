@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
             maven 'maven-test'
+            docker 'docker-test'
     }
     stages {
         stage('Build Create and Push Image') {
