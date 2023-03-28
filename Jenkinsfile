@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build Create and Push Image') {
             steps {
-            withCredentials([usernamePassword(credentialsId: 'fd66cf7b-17f4-443b-b7f2-4a39e236dcfe', passwordVariable: 'p', usernameVariable: 'u')]) {
+            withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
                 sh 'mvn clean install -DskipTests -Ddocker.username=$u -Ddocker.password=$p'
             }
 
