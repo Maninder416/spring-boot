@@ -25,10 +25,12 @@ pipeline {
 
  		stage('Run the test cases'){
          	steps{
-         	withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
-                                    sh "mvn test"
+         	withCredentials([usernamePassword(credentialsId: '4a632d56-baf5-4455-90fe-21e6823f58f1', passwordVariable: 'password', usernameVariable: 'user')]) {
+                sh "mysql connection"
+                sh "mysql -h mysqldb --mysql-user $user --mysql-password $password"
+                sh "connection testing done"
+                sh "mvn test"
             }
-
          	}
         }
 
