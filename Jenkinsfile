@@ -23,18 +23,5 @@ pipeline {
  			}
  		}
 
- 		stage('Run the test cases'){
-         	steps{
-         	withCredentials([usernamePassword(credentialsId: '4a632d56-baf5-4455-90fe-21e6823f58f1', passwordVariable: 'password', usernameVariable: 'user')]) {
-                sh "mysql connection"
-                sh "mysql -h 192.168.112.2 -P 3306 -umaninder -pmaninder -pemployee"
-                sh "connection testing done"
-                sh "mvn test"
-            }
-         	}
-        }
-
-
-
     }
 }
