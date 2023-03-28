@@ -40,6 +40,8 @@ services:
     restart: always
     privileged: true
     user: root
+    depends_on:
+      - mysqldb
     ports:
       - 8083:8080
       - 50003:50000
