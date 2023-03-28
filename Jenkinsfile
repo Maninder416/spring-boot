@@ -17,7 +17,7 @@ pipeline {
  		stage('Test'){
  			steps{
  			withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
-                            sh "docker build -it maninder40407/employee-jdbc ."
+                            sh "docker build -i -t maninder40407/employee-jdbc ."
             }
 
  			}
