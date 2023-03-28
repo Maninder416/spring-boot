@@ -27,7 +27,7 @@ pipeline {
          	steps{
          	withCredentials([usernamePassword(credentialsId: '4a632d56-baf5-4455-90fe-21e6823f58f1', passwordVariable: 'password', usernameVariable: 'user')]) {
                 sh "mysql connection"
-                sh "mysql -h mysqldb --mysql-user $user --mysql-password $password"
+                sh "mysql -h mysqldb -u maninder -p maninder"
                 sh "connection testing done"
                 sh "mvn test"
             }

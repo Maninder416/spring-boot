@@ -12,4 +12,7 @@ RUN curl -fsSL https://get.docker.com | sh
 
 RUN apt-get update && apt-get install -y default-mysql-client
 
+RUN jenkins-plugin-cli --plugins mysql-api:8.0.16
+
+
 USER jenkins
