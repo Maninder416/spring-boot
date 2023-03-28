@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
             maven 'maven-test'
-            docker 'docker-test'
+            org.jenkinsci.plugins.docker.commons.tools.DockerTool 'docker-test'
     }
     stages {
         stage('Build Create and Push Image') {
