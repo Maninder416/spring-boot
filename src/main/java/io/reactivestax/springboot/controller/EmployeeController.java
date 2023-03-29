@@ -17,7 +17,7 @@ public class EmployeeController {
     public ResponseEntity<List<Employee>> getEmployee(){
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
-    @GetMapping("/employees/{id}"   )
+    @GetMapping("/employees/{id}")
     public ResponseEntity<String> getEmployeeById(@PathVariable("id") Long id){
         return ResponseEntity.ok(employeeService.findEmployeeUsingId(id));
     }

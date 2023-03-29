@@ -13,7 +13,7 @@ spring:
         batch_size: 1000
 
   datasource:
-    url: jdbc:mysql://mysqldb:3306/employee
+    url: jdbc:mysql://localhost:3306/employee
     username: maninder
     password: maninder
     driver-class-name: com.mysql.cj.jdbc.Driver

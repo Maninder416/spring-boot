@@ -34,7 +34,7 @@ services:
 #      SPRING_DATASOURCE_PASSWORD: maninder
 #    networks:
 #      - kafka-stack-network
-#
+
   jenkins:
     build:
       context: .
