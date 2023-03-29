@@ -1,19 +1,15 @@
 ```bash
 
 How to install jenkins on local machine:
-1. We need to pick the image from docker hub.
-2. Run the below-mentioned command:
-docker run -p 8080:8080 -p 50000:50000 -d -v 
-jenkins_home:/var/jenkins_home jenkins/jenkins:latest
-
-3.8080 is the default port for jenkins
-4. 50000 is the port for master slave to connect with each other
-
-5. After running it, container will up. check it using docker container ls
-6. Check the container logs, using "docker logs containerId"
-7. It will give you password. Copy this password and hit the
-http://localhost:8080 url and enter the password here.
-8. Click on suggested plugins and give your normal information.
+1. Run the docker-compose file(Contains MySQLDB, SpringBootAPP and jenkins server)
+2. We have comment out the springBootApp code in docker-compose
+3. Once it's up, run the spring boot app.
+4. Run the spring boot app. Our app is now running with docker MySQL even
+though we have mentioned the localhost but it is running on docker.
+5. Now access the "http://localhost:8083/" jenkins server
+6. Click on suggested plugins and give your normal information.
+7. We need to do some configuration while running the pipeline on Jenkins server
+8.
 
 In-case of any issues, watch this video for your reference:
 
