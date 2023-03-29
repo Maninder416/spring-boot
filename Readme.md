@@ -9,7 +9,8 @@ though we have mentioned the localhost but it is running on docker.
 5. Now access the "http://localhost:8083/" jenkins server
 6. Click on suggested plugins and give your normal information.
 7. We need to do some configuration while running the pipeline on Jenkins server
-8.
+8. Created one document inside the doc folder regarding how to do configuration inside the jenkins.
+
 
 In-case of any issues, watch this video for your reference:
 
