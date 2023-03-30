@@ -8,7 +8,7 @@ pipeline {
         stage('Build Create and Push Image') {
             steps {
             withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
-                sh 'mvn clean install -DskipTests -Ddocker.username=$u -Ddocker.password=$p'
+                sh 'mvn -B clean install -DskipTests -Ddocker.username=$u -Ddocker.password=$p'
             }
 
             }
@@ -26,7 +26,7 @@ pipeline {
         stage('maven spring test case') {
             steps {
             withCredentials([usernamePassword(credentialsId: '8b688f9b-c143-4bcf-9eb5-7c0a2edf2d70', passwordVariable: 'p', usernameVariable: 'u')]) {
-                sh 'mvn test'
+                sh 'mvn -B test'
             }
 
             }
