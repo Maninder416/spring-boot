@@ -193,8 +193,31 @@ you can also provide the custom name, along with this build for docker image:
 Now run the docker image:
 docker run -p 8080:8080 maninder40407/bookmarker-api-new-custom
 
+14. CI-CD pipline stuff is done in doc/spring-boot-kubernetes.docx
+
+15. Meantime, we are applying filter on the behalf of pageNo.Now, we are adding one more
+parameter called query. On the behalf of it, we can filter out the data that we need.
+Suppose, there is list of fruits for example, apple,mango, grapes and we need only
+grapes, so in this case, we can sort out the data on the behalf of grapes.
+
+Using query parameter, we can write query like this:
+
+    @Query("""
+            select new io.reactivestax.kubernetes.dto.BookmarkDto(b.id, b.title, b.url, b.createdAt)
+            from Bookmark b where lower(b.title) like lower(concat('%', :query, '%'))
+          """)
 
 
+and using it, we can pass the query in parameter:
+http://localhost:8080/api/bookmarks?query=boot
+
+it will return only those titles, in which it gets boot as a word.
+
+In above way, we have writen the query but same thing we can also achieved through the method naming
+conversion provided by the JPA:
+
+Method name should be like. In this case, there is no need of providing the query parameter.
+Page<BookmarkDto> findByTitleContainsIgnoreCase(String query, Pageable pageable);
 
 
 ```

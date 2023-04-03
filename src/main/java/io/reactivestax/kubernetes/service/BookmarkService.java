@@ -39,8 +39,21 @@ public class BookmarkService {
     public BookmarksDto getBookmarks(Integer page){
         int pageNo = page<1 ? 0: page -1;
         Pageable pageable = PageRequest.of(pageNo,5, Sort.Direction.DESC,"createdAt");
-//        Page<BookmarkDto> bookmarkDtoPage= bookmarkRepository.findAll(pageable).map(bookmarkMapper::toDto);
         Page<BookmarkDto> bookmarkDtoPage= bookmarkRepository.findBookmarks(pageable);
         return new BookmarksDto(bookmarkDtoPage);
     }
+    @Transactional(readOnly = true)
+    public BookmarksDto searchBookmarks(String query, Integer page){
+        int pageNo= page < 1 ? 0 : page -1;
+        Pageable pageable= PageRequest.of(pageNo,10, Sort.Direction.DESC,"createdAt");
+        /**
+         * these 2 methods are doing the same things. In one case, we are providing the query
+         * and in another case, we are doing everything with method name.
+         */
+//        Page<BookmarkDto> bookmarkDtoPage= bookmarkRepository.searchBookmarks(query,pageable);
+        Page<BookmarkDto> bookmarkDtoPage= bookmarkRepository.findByTitleContainsIgnoreCase(query,pageable);
+        return new BookmarksDto(bookmarkDtoPage);
+    }
+
+
 }
