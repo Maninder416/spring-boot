@@ -25,7 +25,7 @@ jobs:
       - name: Test cases execution
         run: mvn clean test
 #if condition, if the branch is equal to main then create the docker image for it and push to docker hub
-      - if: ${{ github.ref == 'refs/heads/main' }}
+      - if: ${{ github.ref == 'refs/heads/feature/kubernetes-exercise-1' }}
         name: Build and Publish Docker Image
         run: |
           echo "This job runs in custom branch"
