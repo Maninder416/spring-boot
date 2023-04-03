@@ -1,11 +1,5 @@
 name: project cicd flow
 
-#on:
-#  push:
-#    branches: [ feature/kubernetes-exercise-1 ]
-#  pull_request:
-#    branches: [ feature/kubernetes-exercise-1 ]
-
 on:
   push:
     branches: [ "**" ]
