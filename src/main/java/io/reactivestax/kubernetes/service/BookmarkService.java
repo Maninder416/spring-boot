@@ -1,10 +1,13 @@
 package io.reactivestax.kubernetes.service;
 
+import io.reactivestax.kubernetes.domain.Bookmark;
 import io.reactivestax.kubernetes.dto.BookmarkDto;
 import io.reactivestax.kubernetes.dto.BookmarksDto;
 import io.reactivestax.kubernetes.mapper.BookmarkMapper;
 import io.reactivestax.kubernetes.repository.BookmarkRepository;
+import io.reactivestax.kubernetes.request.BookmarkRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +15,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class BookmarkService {
 
     /**
@@ -55,5 +62,11 @@ public class BookmarkService {
         return new BookmarksDto(bookmarkDtoPage);
     }
 
+    public BookmarkDto saveBookmark(BookmarkRequest request){
+        Bookmark bookmark= new Bookmark(null, request.getTitle(), request.getUrl(), Instant.now());
+        bookmarkRepository.save(bookmark);
+        log.info("***** Bookmark added successfully ******");
+        return bookmarkMapper.toDto(bookmark);
+    }
 
 }

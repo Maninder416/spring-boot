@@ -1,12 +1,15 @@
 package io.reactivestax.kubernetes.controller;
 
+import io.reactivestax.kubernetes.domain.Bookmark;
+import io.reactivestax.kubernetes.dto.BookmarkDto;
 import io.reactivestax.kubernetes.dto.BookmarksDto;
+import io.reactivestax.kubernetes.request.BookmarkRequest;
 import io.reactivestax.kubernetes.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/bookmarks")
@@ -20,5 +23,11 @@ public class BookmarkController {
             return bookmarkService.getBookmarks(page);
         }
         return bookmarkService.searchBookmarks(query,page);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookmarkDto createBookmarks(@Valid @RequestBody BookmarkRequest request) {
+        return bookmarkService.saveBookmark(request);
     }
 }

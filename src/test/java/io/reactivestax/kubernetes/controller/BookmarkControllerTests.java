@@ -10,14 +10,20 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -131,5 +137,24 @@ public class BookmarkControllerTests {
                 .andExpect(jsonPath("$.hasPrevious", CoreMatchers.equalTo(hasPrevious)))
                 .andExpect(jsonPath("$.isFirst", CoreMatchers.equalTo(isFirst)))
                 .andExpect(jsonPath("$.isLast", CoreMatchers.equalTo(isLast)));
+    }
+    @Test
+    void shouldCreateBookmarkSuccessfully() throws Exception {
+        mockMvc.perform(
+                post("/api/bookmarks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "title": "robin test case",
+                                "url": "www.dataguise.com"
+                                }
+                                """)
+        )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id",notNullValue()))
+                .andExpect(jsonPath("$.title", is("robin test case")))
+                .andExpect(jsonPath("$.url",is("www.dataguise.com")));
+
+
     }
 }

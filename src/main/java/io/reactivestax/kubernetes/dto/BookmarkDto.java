@@ -14,4 +14,5 @@ public class BookmarkDto {
     private String title;
     private String url;
     private Instant createdAt;
+
 }
