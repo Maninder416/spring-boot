@@ -221,7 +221,7 @@ Page<BookmarkDto> findByTitleContainsIgnoreCase(String query, Pageable pageable)
 
 ```
 
-##How to run app?
+## How to run app?
 
 ```shell
 $ git clone https://github.com/Maninder416/spring-boot.git
