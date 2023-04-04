@@ -227,8 +227,8 @@ $ git clone https://github.com/Maninder416/spring-boot.git
 $ cd spring-boot
 $ ./run.sh start
 $ ./run.sh stop
-```
 
+```
 * To start only dependent services
 
 ```shell
