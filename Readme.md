@@ -219,6 +219,7 @@ conversion provided by the JPA:
 Method name should be like. In this case, there is no need of providing the query parameter.
 Page<BookmarkDto> findByTitleContainsIgnoreCase(String query, Pageable pageable);
 
+```
 
 ##How to run app?
 
