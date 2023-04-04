@@ -220,6 +220,23 @@ Method name should be like. In this case, there is no need of providing the quer
 Page<BookmarkDto> findByTitleContainsIgnoreCase(String query, Pageable pageable);
 
 
+##How to run app?
+
+```shell
+$ git clone https://github.com/Maninder416/spring-boot.git
+$ cd spring-boot
+$ ./run.sh start
+$ ./run.sh stop
+```
+
+* To start only dependent services
+
+```shell
+$ ./run.sh start_infra
+$ ./run.sh stop_infra
+
+```
+
 
 
 
