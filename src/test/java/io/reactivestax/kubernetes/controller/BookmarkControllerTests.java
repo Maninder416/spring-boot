@@ -19,13 +19,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,20 +36,21 @@ public class BookmarkControllerTests {
     @Autowired
     private BookmarkRepository bookmarkRepository;
     private List<Bookmark> bookmarkList;
+
     @BeforeEach
     void setUp() {
         bookmarkRepository.deleteAllInBatch();
-        bookmarkList= new ArrayList<>();
-        bookmarkList.add(new Bookmark(null, "dataguise1","dataguise1.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise2","dataguise2.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise3","dataguise3.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise4","dataguise4.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise5","dataguise5.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise6","dataguise6.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise7","dataguise7.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise8","dataguise8.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise9","dataguise9.com", Instant.now()));
-        bookmarkList.add(new Bookmark(null, "dataguise10","dataguise10.com", Instant.now()));
+        bookmarkList = new ArrayList<>();
+        bookmarkList.add(new Bookmark(null, "dataguise1", "dataguise1.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise2", "dataguise2.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise3", "dataguise3.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise4", "dataguise4.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise5", "dataguise5.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise6", "dataguise6.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise7", "dataguise7.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise8", "dataguise8.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise9", "dataguise9.com", Instant.now()));
+        bookmarkList.add(new Bookmark(null, "dataguise10", "dataguise10.com", Instant.now()));
         bookmarkRepository.saveAll(bookmarkList);
 
     }
@@ -80,6 +79,7 @@ public class BookmarkControllerTests {
 
     /**
      * here we are passing the parameter to verify either it works or not
+     *
      * @param pageNo
      * @throws Exception
      */
@@ -90,7 +90,7 @@ public class BookmarkControllerTests {
     void shouldGetBookmarksByPageNo(int pageNo, int totalElements, int totalPages,
                                     int currentPage, boolean isFirst, boolean isLast,
                                     boolean hasNext, boolean hasPrevious) throws Exception {
-        mockMvc.perform(get("/api/bookmarks?page="+pageNo))
+        mockMvc.perform(get("/api/bookmarks?page=" + pageNo))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements", CoreMatchers.equalTo(totalElements)))
                 .andExpect(jsonPath("$.totalPages", CoreMatchers.equalTo(totalPages)))
@@ -107,7 +107,7 @@ public class BookmarkControllerTests {
      * This test case will run for 2 times. One is for page no 1
      * and another is for page no 2.
      * When the page no is 1, we are expecting:
-     *
+     * <p>
      * 1,10,2,1,true,false,true,false
      * It means: page no is: 1
      * total elements in list: 10
@@ -129,7 +129,7 @@ public class BookmarkControllerTests {
     void shouldGetBookmarksByMultiplePageNo(int pageNo, int totalElements, int totalPages,
                                             int currentPage, boolean isFirst, boolean isLast,
                                             boolean hasNext, boolean hasPrevious) throws Exception {
-        mockMvc.perform(get("/api/bookmarks?page="+pageNo))
+        mockMvc.perform(get("/api/bookmarks?page=" + pageNo))
                 .andExpect(jsonPath("$.totalElements", CoreMatchers.equalTo(totalElements)))
                 .andExpect(jsonPath("$.totalPages", CoreMatchers.equalTo(totalPages)))
                 .andExpect(jsonPath("$.currentPage", CoreMatchers.equalTo(currentPage)))
@@ -138,23 +138,46 @@ public class BookmarkControllerTests {
                 .andExpect(jsonPath("$.isFirst", CoreMatchers.equalTo(isFirst)))
                 .andExpect(jsonPath("$.isLast", CoreMatchers.equalTo(isLast)));
     }
+
     @Test
     void shouldCreateBookmarkSuccessfully() throws Exception {
         mockMvc.perform(
-                post("/api/bookmarks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                "title": "robin test case",
-                                "url": "www.dataguise.com"
-                                }
-                                """)
-        )
+                        post("/api/bookmarks")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                        {
+                                        "title": "robin test case",
+                                        "url": "www.dataguise.com"
+                                        }
+                                        """)
+                )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id",notNullValue()))
+                .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.title", is("robin test case")))
-                .andExpect(jsonPath("$.url",is("www.dataguise.com")));
+                .andExpect(jsonPath("$.url", is("www.dataguise.com")));
 
 
+    }
+
+    @Test
+    void shouldFailToCreateBookmarkSuccessfully() throws Exception {
+        mockMvc.perform(
+                        post("/api/bookmarks")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                        {
+                                        "title": "robin test case"
+                                        }
+                                        """)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(header().string("Content-type", is("application/problem+json")))
+                .andExpect(jsonPath("$.type", is("https://zalando.github.io/problem/constraint-violation")))
+                .andExpect(jsonPath("$.title", is("Constraint Violation")))
+                .andExpect(jsonPath("$.status", is(400)))
+                .andExpect(jsonPath("$.violations", hasSize(1)))
+                .andExpect(jsonPath("$.violations[0].field", is("url")))
+                .andExpect(jsonPath("$.violations[0].message", is("URL should not be empty")))
+                .andReturn();
     }
 }
