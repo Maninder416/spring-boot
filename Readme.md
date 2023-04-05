@@ -17,8 +17,9 @@ $ ./run.sh stop_infra
 
 ```
 
+## kubernetes pod command:
 ```shell
-## Steps to reproduce the issue:
+
 1. docker image is present on docker hub once my project pipeline successfully completed:
 maninder40407/bookmarker-api-jib:latest
 
@@ -62,8 +63,13 @@ kubectl apply -f pod.yml
 5. Delete pod:
 kubectl delete -f pod.yml
 
+```
 
+## kubernetes deployment command:
 
+```shell
+1. create deployment:
+kubectl create deployment bookmarker-api --image maninder40407/bookmarker-api-jib
 
 
 
