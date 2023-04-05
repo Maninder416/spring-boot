@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bookmarker-api
+spec:
+  containers:
+    - name: bookmarker-api
+      image: maninder40407/bookmarker-api-jib:latest
