@@ -22,18 +22,51 @@ $ ./run.sh stop_infra
 1. docker image is present on docker hub once my project pipeline successfully completed:
 maninder40407/bookmarker-api-jib:latest
 
-2. Kind cluster is up and working:
+2. how to create the pod:
+kubectl run bookmarker-api --image=maninder40407/bookmarker-api-jib --port=8080
 
-3. Running this command as explained by you:
+3. If you want to see the configuration, while creating the pod using this command we can use:
+kubectl run bookmarker-api2 --image=maninder40407/bookmarker-api-jib --port=8080 --dry-run=client -o yaml
 
-kubectl run bookmarker-api --image=maninder40407/bookmarker-api-lib --port=8080
-or
-kubectl run bookmarker-api --image=maninder40407/bookmarker-api-lib:latest --port=8080
+it will print output like this:
 
-4. Able to create the pod but, it is not in running status
+*****************************************************
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: bookmarker-api2
+  name: bookmarker-api2
+spec:
+  containers:
+  - image: maninder40407/bookmarker-api-jib
+    name: bookmarker-api2
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+***********************************************************
 
-5. If I run the below-mentioned command to create pod, it worked fine:
-   kubectl apply -f pod.yml
+4. You can save this output into yml file like this:
+
+kubectl run bookmarker-api2 --image=maninder40407/bookmarker-api-jib --port=8080 --dry-run=client -o yaml >
+ pod.yml
+
+and we can create pod from this yml file using command:
+ 
+kubectl apply -f pod.yml
+
+5. Delete pod:
+kubectl delete -f pod.yml
+
+
+
+
+
+
 ```
 
 

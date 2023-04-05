@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bookmarker-api2
+  labels:
+    run: bookmarker-api2
+    version: "1.0"
+
+spec:
+  containers:
+  - image: maninder40407/bookmarker-api-jib
+    name: bookmarker-api2
+    ports:
+    - containerPort: 8080
