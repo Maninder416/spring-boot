@@ -71,6 +71,36 @@ kubectl delete -f pod.yml
 1. create deployment:
 kubectl create deployment bookmarker-api --image maninder40407/bookmarker-api-jib
 
+When this command run, it will create pod, deployment, replica set for you.
+you can check it using:
+kubectl get all
+
+2. delete deployment:
+kubectl delete deployment.apps/bookmarker-api
+
+3. create yml file from deployment command:
+kubectl create deployment bookmarker-api --image maninder40407/bookmarker-api-jib --dry-run=client -o yaml > deployment.y
+ml
+o is output, means output type is yaml file.
+
+4. scale up the replica set:
+  a. go inside the yaml file and change the replica set count according to requirement:
+  kubectl apply -f deployment.yml
+  b. Another way to scale up the replica set:
+  kubectl scale deployment bookmarker-api --replicas=3
+  
+```
+
+## kubernetes configMap and secret command:
+
+```shell
+1. ConfigMap command:
+
+kubectl create configmap db-config --from-literal=db_host=postgres --from-literal=db_name=appdb
+providing db_host and db_name, as these are plain text so we need to store it in configmap
+
+2. delete config map:
+kubectl delete cm db-config
 
 
 ```

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookmarker-api
+  labels:
+    app: bookmarker-api
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bookmarker-api
+  template:
+    metadata:
+      labels:
+        app: bookmarker-api
+    spec:
+      containers:
+      - image: maninder40407/bookmarker-api-jib
+        name: bookmarker-api-jib
+
