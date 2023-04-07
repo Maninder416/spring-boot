@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookmarker-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /bookmarker-api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: bookmarker-api-svc
+                port:
+                  number: 8080
