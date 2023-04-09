@@ -1,5 +1,3 @@
-
-
 ## How to run app?
 
 ```shell
