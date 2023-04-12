@@ -1,0 +1,26 @@
+name: JAVA CICD with maven
+
+on:
+  push:
+    branches: [ CRUD_kubernetes_pipeline ]
+  pull_request:
+    branches: [ CRUD_kubernetes_pipeline ]
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    name: Run mvn build and generate coverage report
+
+    steps:
+    - uses: action/checkout@v2
+    - name: Set up JDK 11
+      uses: action/setup@v1
+      with:
+        java-version: 1.8
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+
+
+
