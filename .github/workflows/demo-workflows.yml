@@ -25,5 +25,12 @@ jobs:
       - name: Test cases execution
         run: mvn clean test
 
+      - if: ${{ github.ref == 'refs/heads/feature/CRUD_kubernetes_pipeline'}}
+        name: Build and Publish Docker Image
+        run: |
+          echo "This job runs in custom branch"
+            ./mvnw clean package jib:dockerBuild -DskipTests
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker push ${{ secrets.DOCKER_USERNAME }}/maninder40407/crud-kubernetes:latest
 
 
