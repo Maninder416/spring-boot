@@ -14,7 +14,7 @@ jobs:
     name: Run mvn build and generate coverage report
 
     steps:
-    - uses: action/checkout@v2
+    - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: action/setup@v1
       with:
