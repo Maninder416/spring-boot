@@ -104,7 +104,6 @@
                         <image>maninder40407/crud-kubernetes</image>
                         <tags>
                             <tag>latest</tag>
-                            <tag>0.0.1</tag>
                         </tags>
                     </to>
                     <container>
@@ -117,6 +116,5 @@
         </plugins>
 
     </build>
-
 
 </project>
