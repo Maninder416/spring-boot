@@ -21,7 +21,6 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn clean install
-
     - name: Test cases execution
       run: mvn clean test
         #if condition, if the branch is equal to main then create the docker image for it and push to docker hub
