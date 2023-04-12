@@ -20,7 +20,20 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn clean test
+      run: mvn clean install
 
+    - name: Test cases execution
+      run: mvn clean test
+        #if condition, if the branch is equal to main then create the docker image for it and push to docker hub
+        #bookmarker-api-jib:latest image name defined in docker push command below will pick from image
+        # name defined in pom. file in JIB plugin. If you want to user dockerFile then you should define
+        # file path but here we are using JIB so it's picking from pom.
+        - if: ${{ github.ref == 'refs/heads/feature/CRUD_kubernetes_pipeline'}}
+          name: Build and Publish Docker Image
+          run: |
+            echo "This job runs in custom branch"
+            ./mvnw clean package jib:dockerBuild -DskipTests
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker push ${{ secrets.DOCKER_USERNAME }}/maninder40407/crud-kubernetes:latest
 
 
