@@ -86,7 +86,7 @@
                 <version>3.2.1</version>
                 <configuration>
                     <from>
-                        <image>openjdk:17-alpine</image>
+                        <image>openjdk:11</image>
                     </from>
                     <to>
                         <image>maninder40407/crud-kubernetes</image>
