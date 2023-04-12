@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: action/setup@v1
+      uses: actions/setup@v1
       with:
         java-version: 11
     - name: Build with Maven
