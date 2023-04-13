@@ -52,7 +52,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>rds.jar</finalName>
 	</build>
 
 </project>
