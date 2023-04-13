@@ -1,3 +1,33 @@
+## Spring Boot application covered below things:
+```bash
+1. spring boot with h2 database
+2. added pipeline for it.
+3. added kubernetes support. Able to run it on service layer.
+```
+
+## How to run spring boot app
+```bash
+1. Simple application will run without any configuration
+2. If run it on kubernetes:
+go to kind folder:
+./create-cluster.sh
+
+it will run kind kubernetes.
+
+3. Go to k8s folder:
+kubectl apply -f .
+
+4. Your app will run on kubernetes service on port:
+
+http://localhost:18080/employees
+
+we define this port inside "kind-config" inside kind folder.
+
+if we need documentation:
+https://github.com/Maninder416/spring-boot/tree/feature/kubernetes-exercise-1/doc
+
+```
+
 ```bash
 
 How to install jenkins on local machine:

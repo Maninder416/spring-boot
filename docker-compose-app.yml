@@ -1,0 +1,23 @@
+version: '2'
+services:
+
+  spring-boot-mysql-db:
+    depends_on:
+      - mysqldb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 9000:9000
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/employee?useSSL=false
+      SPRING_DATASOURCE_USERNAME: maninder
+      SPRING_DATASOURCE_PASSWORD: maninder
+    networks:
+      - kafka-stack-network
+
+networks:
+  kafka-stack-network:
+    driver: bridge
