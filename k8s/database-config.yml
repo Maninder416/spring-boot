@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  h2_host: jdbc:h2:mem:employee
+
+metadata:
+  name: employee-config
+
+---
+
+apiVersion: v1
+kind: Secret
+type: Opaque
+data:
+  h2_password: cGFzc3dvcmQ=
+  h2_username: c2E=
+
+metadata:
+  name: employee-secret
