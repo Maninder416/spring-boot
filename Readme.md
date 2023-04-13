@@ -28,9 +28,10 @@ https://github.com/Maninder416/spring-boot/tree/feature/kubernetes-exercise-1/do
 
 ```
 
+
+### How to install jenkins on local machine:
 ```bash
 
-How to install jenkins on local machine:
 1. We need to pick the image from docker hub.
 2. Run the below-mentioned command:
 docker run -p 8080:8080 -p 50000:50000 -d -v 
