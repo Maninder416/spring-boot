@@ -1,5 +1,6 @@
 server:
   port: 9001
+
 spring:
   jpa:
     properties:
@@ -11,6 +12,7 @@ spring:
       jdbc:
         batch_size: 1000
   datasource:
+    initialization-mode: always
     url: jdbc:mysql://localhost:3306/silicon
     username: maninder
     password: maninder
