@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringAwsApplication {
+public class SpringSecurityLdapApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringAwsApplication.class, args);
+		SpringApplication.run(SpringSecurityLdapApplication.class, args);
 	}
 
 }
