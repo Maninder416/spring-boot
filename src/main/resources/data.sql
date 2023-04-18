@@ -1,1 +1,1 @@
-insert into user2 values(2,"maninder","maninder","ADMIN",true);
+insert into user values(3,true,"maninder","ADMIN","maninder");
