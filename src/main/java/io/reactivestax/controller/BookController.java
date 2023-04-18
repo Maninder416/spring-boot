@@ -7,6 +7,7 @@ import io.reactivestax.repository.BookRepository;
 import io.reactivestax.service.MyUserDetailsService;
 import io.reactivestax.utils.JwtUtil;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class BookController {
     @Autowired
     private BookRepository bookRepository;
@@ -44,11 +46,14 @@ public class BookController {
 
     @PostMapping("/books")
     public Book saveBook(@RequestBody Book book) {
+        log.info("**** saving book ***** ");
+        log.info("book is: "+book);
         return bookRepository.save(book);
     }
 
     @GetMapping("/books")
     public List<Book> findBooks() {
+        log.info("**** fetching all books ***** ");
         return bookRepository.findAll();
     }
 

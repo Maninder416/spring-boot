@@ -1,7 +1,9 @@
 package io.reactivestax.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "Book")
+@Getter
+@Setter
 public class Book {
 
     @Id
