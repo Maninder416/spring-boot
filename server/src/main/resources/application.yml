@@ -1,0 +1,23 @@
+server:
+  port: 9001
+
+okta:
+  oauth2:
+    issuer: https://dev-65346729.okta.com/oauth2/default
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        batch_size: 1000
+  datasource:
+    initialization-mode: always
+    url: jdbc:mysql://localhost:3306/silicon
+    username: maninder
+    password: maninder
+    driver-class-name: com.mysql.cj.jdbc.Driver
