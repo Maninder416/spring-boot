@@ -1,6 +1,7 @@
 package io.reactivestax.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,36 +19,34 @@ import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class TestController {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private AuthorizedClientServiceOAuth2AuthorizedClientManager manager;
 
-    @GetMapping("/test")
-    public String testing(){
-        OAuth2AuthorizeRequest request= OAuth2AuthorizeRequest.withClientRegistrationId("okta")
+    @GetMapping("/books")
+    public String getAllBooks(){
+        OAuth2AuthorizeRequest request3= OAuth2AuthorizeRequest.withClientRegistrationId("okta")
                         .principal("Demo Service")
                                 .build();
 
-        OAuth2AuthorizedClient client= this.manager.authorize(request);
+        OAuth2AuthorizedClient client= this.manager.authorize(request3);
         OAuth2AccessToken token= Objects.requireNonNull(client).getAccessToken();
+        log.info("***** token is: *****: "+token.getTokenValue());
         HttpHeaders headers= new HttpHeaders();
-        headers.add("Authorization","Bearer "+token.getTokenValue());
-        HttpEntity request2= new HttpEntity(headers);
-
-
-        System.out.println("bean is: "+restTemplate.toString());
-//        ResponseEntity<String> response = restTemplate.
-//                getForEntity("http://localhost:9001/books",String.class);
+        headers.add("Authorization","Bearer " + token.getTokenValue());
+        HttpEntity request= new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.
                 exchange(
                         "http://localhost:9001/books",
                         HttpMethod.GET,
-                        request2,
+                        request,
                         String.class
 
                 );
+        log.info("***** response is: ****** : "+response.getBody());
         return response.getBody();
     }
 

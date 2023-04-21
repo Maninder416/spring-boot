@@ -21,7 +21,7 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    @PreAuthorize("hasAuthority('custom_scope')")
+    @PreAuthorize("hasAuthority('SCOPE_custom_scope')")
     public List<Book> findBooks(){
         return bookRepository.findAll();
     }

@@ -17,57 +17,10 @@ import org.springframework.security.oauth2.jwt.*;
 
 import java.util.Arrays;
 
-//@EnableWebSecurity
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-//    @Autowired
-//    private UserDetailsService userDetailsService;
 
-
-
-    /**
-     * Here we are taking the user credentials from db.
-     *
-     * @param auth
-     * @throws Exception
-     */
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService);
-//
-//    }
-
-//    /**
-//     * Below code is taking the credentials from in-memory
-//     * we define all credential over the method
-//     *
-//     * @return
-//     */
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("maninder")
-//                .password("maninder")
-//                .roles("USER")
-//                .and()
-//                .withUser("admin")
-//                .password("admin")
-//                .roles("ADMIN");
-//
-//    }
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-
-//    @Override
-//    public void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers(HttpMethod.GET, "/**").hasAnyRole("USER", "ADMIN")
-//                .antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
-//                .and()
-//                .formLogin();
-//    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -77,5 +30,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .oauth2ResourceServer()
                 .jwt();
     }
+
+//    @Override
+//    public void configure(HttpSecurity http) throws Exception {
+//        http.csrf().disable()
+//                .authorizeRequests().antMatchers("/books").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .oauth2ResourceServer()
+//                .jwt();
+//    }
 
 }

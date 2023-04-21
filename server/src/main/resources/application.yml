@@ -1,9 +1,20 @@
 server:
   port: 9001
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+    com:
+      okta: DEBUG
+
+
 okta:
   oauth2:
     issuer: https://dev-65346729.okta.com/oauth2/default
+    client-id: 0oa973xcjmqywo7mf5d7
+    client-secret: PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t
 
 spring:
   jpa:

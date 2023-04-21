@@ -16,7 +16,6 @@
 	<modules>
 		<module>server</module>
 		<module>client</module>
-		<module>rest-template</module>
 	</modules>
 	<packaging>pom</packaging>
 	<properties>
