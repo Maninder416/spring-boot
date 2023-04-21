@@ -1,6 +1,12 @@
 ### Spring boot app with client credentials flow
 
-**Steps to do**
+**How to run spring boot app**
+```shell
+1. Run docker-compose as we are using mysql.
+2. run server and then client.
+```
+
+**Code explains**
 
 ```shell
 1. We have created 2 modules one is server and other is client.
