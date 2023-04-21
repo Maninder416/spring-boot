@@ -1,0 +1,9 @@
+io/reactivestax/config/SecurityConfiguration.class
+io/reactivestax/repository/BookRepository.class
+io/reactivestax/SpringAwsApplication.class
+io/reactivestax/repository/UserRepository.class
+io/reactivestax/entity/Book.class
+io/reactivestax/model/MyUserDetails.class
+io/reactivestax/service/MyUserDetailsService.class
+io/reactivestax/controller/BookController.class
+io/reactivestax/entity/User.class
