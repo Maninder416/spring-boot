@@ -10,11 +10,11 @@ logging:
       okta: DEBUG
 
 
-okta:
-  oauth2:
-    issuer: https://dev-65346729.okta.com/oauth2/default
-    client-id: 0oa973xcjmqywo7mf5d7
-    client-secret: PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t
+#okta:
+#  oauth2:
+#    issuer: https://dev-65346729.okta.com/oauth2/default
+#    client-id: 0oa973xcjmqywo7mf5d7
+#    client-secret: PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t
 
 spring:
   jpa:
@@ -32,3 +32,10 @@ spring:
     username: maninder
     password: maninder
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+okta:
+  oauth2:
+    issuer: https://dev-65346729.okta.com/oauth2/default
+    client-id: 0oa97j9zqmhSp1Sx75d7
+    client-secret: MaiUlFXl3PSm131cpaGyJv-K95N98BIxqXN1AdtK

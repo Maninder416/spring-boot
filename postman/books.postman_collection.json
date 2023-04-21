@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "f33bb614-3690-4daa-ac75-c9dd0560f7b5",
+		"name": "books",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18625497"
+	},
+	"item": [
+		{
+			"name": "Get Books",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJraWQiOiJHUXo1dUxKeEFSWXVtX2J4M0w3WGMtZkVDNW5IMFZINnRLTmV6eGVOcE5BIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkdEV2JqX2IyaXpZb2hVWHlZTTZxSFpwM2NqQlV0YUl0d0VnWW1oanpKWDQiLCJpc3MiOiJodHRwczovL2Rldi02NTM0NjcyOS5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2ODIwODQxNDIsImV4cCI6MTY4MjA4Nzc0MiwiY2lkIjoiMG9hOTczeGNqbXF5d283bWY1ZDciLCJzY3AiOlsiY3VzdG9tX3Njb3BlIl0sInN1YiI6IjBvYTk3M3hjam1xeXdvN21mNWQ3In0.XTzfCChHTetbprcWp0ZXx1VpkYb83_E8aKmwn3KpLGjvGDeS81_Q9jFIsV7RkAlWrM5c1qOwn8CbGMXQ7wD2f7cFO-5-G6ZyzI1f9Bly4OXKH_rCdVAF0X071IQ01xxpv2RmVqcQrrVe2m6bBtpEVkdqbgWhE3uKvQU2lShIEYm2UjwIojJV1W_KYwuSPmhoCDDq5ULSMmO227u6Dfonwx7cvBi8sAIYA5qbFKgolg8hLfbzk9J-RvjN1q3CD1Xw4EZmEvQOJjfK4aKlGumslLf_J3tT6SjIDzERoV1tu-QTgj_0eSus-fyPbye6GQXVjnBTtUkVMXkJJ5QJo8w4WA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9001/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JWT Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST BOOKS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4MTk0ODQzOSwiaWF0IjoxNjgxOTEyNDM5fQ.KJXm_WW6jEQMpMCU8UoPRvW51u1ZA9bZ4H5aX139RjU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"code cleaner\",\n    \"price\": 12.25\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Client",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9003/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Okta-jwt",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "custom_scope",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "0oa973xcjmqywo7mf5d7",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://dev-65346729.okta.com/oauth2/default/v1/token",
+					"protocol": "https",
+					"host": [
+						"dev-65346729",
+						"okta",
+						"com"
+					],
+					"path": [
+						"oauth2",
+						"default",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

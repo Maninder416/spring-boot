@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Objects;
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
 public class TestController {
     @Autowired
