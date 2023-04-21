@@ -1,6 +1,5 @@
 ### Spring boot app with security
 
-
 ### Topics covered in this spring boot app:
 ```shell
 1. Docker mysql running local spring boot app.
@@ -19,7 +18,6 @@
 6. user/pass: admin
 
 ```
-
 
 ### How to run spring boot app:
 ```shell
