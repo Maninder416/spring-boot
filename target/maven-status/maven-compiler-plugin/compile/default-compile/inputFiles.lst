@@ -1,9 +1,1 @@
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/SpringAwsApplication.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/controller/BookController.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/config/SecurityConfiguration.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/entity/Book.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/repository/BookRepository.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/model/MyUserDetails.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/repository/UserRepository.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/entity/User.java
-/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/service/MyUserDetailsService.java
+/Users/manindersingh/Documents/spring-boot-projects/spring-boot/src/main/java/io/reactivestax/springboot/Application.java
