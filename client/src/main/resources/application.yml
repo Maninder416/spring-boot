@@ -1,7 +1,6 @@
 server:
   port: 9003
 
-
 spring:
   security:
     oauth2:
@@ -12,45 +11,7 @@ spring:
         registration:
           okta-client:
             scope: custom_scope
-            client-id: 0oa97j9zqmhSp1Sx75d7
-            client-secret: MaiUlFXl3PSm131cpaGyJv-K95N98BIxqXN1AdtK
+            client-id: 0oa973xcjmqywo7mf5d7
+            client-secret: PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t
             authorization-grant-type: client_credentials
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#spring:
-#  security:
-#    oauth2:
-#      client:
-#        provider:
-#          okta:
-#            token-uri: https://dev-65346729.okta.com/oauth2/default/v1/token
-#        registration:
-#          okta-client:
-#            scope: custom_scope
-#            client-id: 0oa973xcjmqywo7mf5d7
-#            client-secret: PMuTZM9ScOYpQSr0ufT6x_ZoF5BnTSGyJwbVDH2t
-#            authorization-grant-type: client_credentials
 
