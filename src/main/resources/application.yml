@@ -17,3 +17,11 @@ spring:
     username: maninder
     password: maninder
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+keycloak:
+  realm: demo-new
+  auth-server-url: http://localhost:8080/auth
+  resource: new-client-keycloak
+  public-client: true
+  bearer-only: true

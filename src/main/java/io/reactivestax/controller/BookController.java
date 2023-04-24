@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -20,12 +21,14 @@ public class BookController {
     }
 
     @GetMapping("/books")
+    @RolesAllowed("admin")
     public List<Book> findBooks(){
         return bookRepository.findAll();
     }
 
     @SneakyThrows
     @GetMapping("/{id}")
+    @RolesAllowed("user")
     public Book findBook(@PathVariable int id){
         Book book= bookRepository.findById(id).orElseThrow(()-> new Exception("Book not found"));
         return book;
