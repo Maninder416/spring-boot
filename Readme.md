@@ -25,3 +25,11 @@
 docker-compose file as we are using docker mysql
 2. Run the spring boot app.
 ```
+
+### Understanding of code flow
+```shell
+All steps are written in doc. 
+video I watched for reference:
+https://www.youtube.com/watch?v=La082JsJoH4&t=300s&ab_channel=JavaTechie
+
+```
