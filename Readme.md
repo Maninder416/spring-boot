@@ -16,3 +16,17 @@ So basically to avoid boiler plate code, they launch the concept of record.
 ```
 ![Alt Text](doc/img_1.png)
 
+**Added the ProblemDetail class**
+
+```shell
+1. Earlier, we used to create one error class for displaying the error code
+in better way like below mention screenshot.
+
+```
+![Alt Text](doc/img.png)
+```shell
+2. But now they launch the problemDetial class, in which we can set the error
+code values as according to our requirements.
+
+```
+![Alt Text](doc/img_2.png)
