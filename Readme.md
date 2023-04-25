@@ -30,3 +30,9 @@ code values as according to our requirements.
 
 ```
 ![Alt Text](doc/img_2.png)
+
+```shell
+3. Output be like this:
+
+```
+![Alt Text](doc/img_3.png)
