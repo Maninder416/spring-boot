@@ -12,4 +12,4 @@ creating class. There are many benfits to using it:
 So basically to avoid boiler plate code, they launch the concept of record.
 
 ```
-![Alt Text](doc/img.png)
+![Alt Text](doc/img_1.png)
