@@ -8,8 +8,11 @@ creating class. There are many benfits to using it:
 1. No need to create constructor
 2. No need to implement for hashcode and toString method.
 3. No need for getter method.
+4. Record are inherently immutable, meaning that field cannot be changed
+after they created.
 
 So basically to avoid boiler plate code, they launch the concept of record.
 
 ```
 ![Alt Text](doc/img_1.png)
+
