@@ -125,7 +125,10 @@ webclient and also created the bean for interface we created above.
 ```
 ![Alt Text](doc/img_5.png)
 ```shell
-5. Created a controller class in which 
+5. Created a controller class in which created bean of customer client.
+6. using this inteface, called the getAllCustomers method.
+7. We defined the server URL in webclient from where we get data and put this
+webclient bean inside the "customerClient", so now it has details for the URL.
 
 ```
 ![Alt Text](doc/img_6.png)
