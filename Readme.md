@@ -118,11 +118,18 @@ To understand this, we created a new module called "client".
 2. Annotated with "HttpExchange" annotation.
 3. Created a method "getAllCustomers", we know that, we ar getting
 list of customers from server side and it's return type is customer.
+so also created a customer class.
 4. After this, we created a config class in which we created the bean of
 webclient and also created the bean for interface we created above.
 
 ```
 ![Alt Text](doc/img_5.png)
+```shell
+5. Created a controller class in which 
+
+```
+![Alt Text](doc/img_6.png)
+
 
 **Observability feature**
 ```shell
