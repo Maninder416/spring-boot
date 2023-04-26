@@ -110,10 +110,19 @@ API like WebClient. HttpServiceProxyFactory is an alternative approach that
 provides a higher-level, more declarative API for consuming REST APIs in Spring.
 
 To understand this, we created a new module called "client".
-
-
 ```
 ![Alt Text](doc/img_4.png)
+
+```shell
+1. In this we created a interface called customerClient.
+2. Annotated with "HttpExchange" annotation.
+3. Created a method "getAllCustomers", we know that, we ar getting
+list of customers from server side and it's return type is customer.
+4. After this, we created a config class in which we created the bean of
+webclient and also created the bean for interface we created above.
+
+```
+![Alt Text](doc/img_5.png)
 
 **Observability feature**
 ```shell
