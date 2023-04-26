@@ -113,7 +113,7 @@ To understand this, we created a new module called "client".
 
 
 ```
-![Alt Text](doc/img_3.png)
+![Alt Text](doc/img_4.png)
 
 **Observability feature**
 ```shell
