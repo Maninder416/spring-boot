@@ -148,7 +148,7 @@ we will enable security here.
 First of all, add dependenices in server side pom: 
 
 ```
-![Alt Text](doc/img_7.png)
+![Alt Text](doc/img_8.png)
 ```shell
 2. 
 ```
