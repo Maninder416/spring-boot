@@ -133,6 +133,12 @@ webclient bean inside the "customerClient", so now it has details for the URL.
 ```
 ![Alt Text](doc/img_6.png)
 
+```shell
+7. Output is:
+
+```
+![Alt Text](doc/img_7.png)
+
 
 **Observability feature**
 ```shell
