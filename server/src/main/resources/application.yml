@@ -17,3 +17,9 @@ spring:
     username: maninder
     password: maninder
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+okta:
+  oauth2:
+    issuer: https://dev-65346729.okta.com/oauth2/default
+    client-id: 0oa99mpbi8H6JSp5F5d7
+    client-secret: w52spNo_-ui4eaQBcQx8-WgLwOfjtwRJtb-4nLet
