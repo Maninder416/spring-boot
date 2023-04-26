@@ -139,6 +139,20 @@ webclient bean inside the "customerClient", so now it has details for the URL.
 ```
 ![Alt Text](doc/img_7.png)
 
+**Enable client credentials**
+```shell
+1. We have created 2 modules (server and client) and it's not good idea,
+if our client calls server without any security. Anyone can steal the data so
+we will enable security here.
+
+First of all, add dependenices in server side pom: 
+
+```
+![Alt Text](doc/img_7.png)
+```shell
+2. 
+```
+
 
 **Observability feature**
 ```shell
