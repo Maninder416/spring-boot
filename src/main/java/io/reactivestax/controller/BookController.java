@@ -4,6 +4,7 @@ import io.reactivestax.entity.Book;
 import io.reactivestax.repository.BookRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,20 +16,28 @@ public class BookController {
     private BookRepository bookRepository;
 
     @PostMapping("/books")
-    public Book saveBook(@RequestBody Book book){
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Book saveBook(@RequestBody Book book) {
         return bookRepository.save(book);
     }
 
     @GetMapping("/books")
-    public List<Book> findBooks(){
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public List<Book> findBooks() {
         return bookRepository.findAll();
     }
 
     @SneakyThrows
     @GetMapping("/{id}")
-    public Book findBook(@PathVariable int id){
-        Book book= bookRepository.findById(id).orElseThrow(()-> new Exception("Book not found"));
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Book findBook(@PathVariable int id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new Exception("Book not found"));
         return book;
+    }
+
+    @GetMapping("/home")
+    public String getHome() {
+        return "Hello Team";
     }
 
 
