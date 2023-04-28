@@ -145,7 +145,46 @@ webclient bean inside the "customerClient", so now it has details for the URL.
 many times someone hit this endpoints. We can use this information in 
 creating the dashboard like graphana, it is same as sleuth server but not
 a replacement.
+
+Steps:
+1. Added the actuator dependency
+2. Autowired ObservationRegistry
+3. Add this into your methods and return Observation.
+
 ```
-![Alt Text](doc/img_3.png)
+![Alt Text](doc/img_10.png)
 
+```shell
+4. Added the below configuration to expose all actuator endpoints:
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      
+5. Run the spring boot app and actuator will expose its 13 endpoints.      
+
+```
+![Alt Text](doc/img_11.png)
+
+```shell
+6. Add a new customer, get customer whatever you want to track your API calls.
+Means it monitor your endpoints, how many times you hit which endpoint.
+
+7. click on this endpoints: "http://localhost:9001/actuator/metrics"
+8. Check line 3 and 16, it catch your APIs.
+
+```
+![Alt Text](doc/img_12.png)
+
+```shell
+9. Check which endpoints, you want to track:
+for example, I am seeing get customer API and it provides you how many times
+it calls by user.
+
+```
+![Alt Text](doc/img_13.png)

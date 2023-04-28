@@ -16,7 +16,8 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-    ObservationRegistry registry = ObservationRegistry.create();
+    @Autowired
+    private ObservationRegistry registry;
 
     public Customer saveCustomer(Customer customer) {
 

@@ -1,5 +1,6 @@
 package io.reactivestax.controller;
 
+import io.micrometer.observation.ObservationRegistry;
 import io.reactivestax.entity.Customer;
 import io.reactivestax.record.CustomerRecord;
 import io.reactivestax.repository.CustomerRepository;
@@ -17,6 +18,8 @@ public class CustomerController {
     private CustomerRepository customerRepository;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private ObservationRegistry registry;
 
 
     @PostMapping("/customers")
@@ -27,6 +30,7 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public List<Customer> getAllCustomers() {
+        System.out.println("bean is: "+registry);
         return customerService.findAll();
     }
 
