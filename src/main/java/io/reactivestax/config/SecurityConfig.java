@@ -34,7 +34,7 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(a -> a.disable())
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/home", "/user")
+                        .requestMatchers( "/user")
                         .permitAll()
                         .requestMatchers("/books/**")
                         .authenticated())
