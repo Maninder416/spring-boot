@@ -6,11 +6,17 @@
 3. "/user", for creating the new user which has roles assigned.
 ```
 ![Alt Text](images/img.png)
+
 ![Alt Text](images/img_1.png)
+
 ![Alt Text](images/img_2.png)
+
 ![Alt Text](images/img_3.png)
+
 ![Alt Text](images/img_4.png)
+
 ![Alt Text](images/img_5.png)
+
 ![Alt Text](images/img_6.png)
 
 
