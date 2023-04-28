@@ -7,16 +7,22 @@
 ```
 ![Alt Text](images/img.png)
 
+**User Entity**
 ![Alt Text](images/img_1.png)
 
+**User Repository**
 ![Alt Text](images/img_2.png)
 
+**UserDetails Implementation**
 ![Alt Text](images/img_3.png)
 
+**UserDetails Service implementation**
 ![Alt Text](images/img_4.png)
 
+**User Controller**
 ![Alt Text](images/img_5.png)
 
+**Book Controller**
 ![Alt Text](images/img_6.png)
 
 
