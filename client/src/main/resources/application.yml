@@ -1,0 +1,30 @@
+server:
+  port: 9001
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        batch_size: 1000
+  datasource:
+    initialization-mode: always
+    url: jdbc:mysql://localhost:3306/silicon
+    username: maninder
+    password: maninder
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+spring:
+  application:
+    name: zipkin-testing
+
+logging:
+  level:
+    org.springframework.cloud.sleuth: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId},%X{spanId}] [%logger{36}] - %msg%n"
