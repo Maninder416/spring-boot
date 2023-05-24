@@ -5,9 +5,11 @@ import io.reactivestax.entity.Employee;
 import io.reactivestax.repository.DepartmentRepository;
 import io.reactivestax.repository.EmployeeRepository;
 import io.reactivestax.request.EmployeeRequest;
+import io.reactivestax.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,20 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
 
     @Autowired
-    private DepartmentRepository departmentRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @PostMapping("/employees")
-    public ResponseEntity<Employee> saveEmployee(@RequestBody EmployeeRequest request){
-        Department department= new Department();
-        department.setName(request.getName());
-        department= departmentRepository.save(department);
-        Employee employee = new Employee(request);
-        employee.setDepartment(department);
-        employee= employeeRepository.save(employee);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+//    @Transactional
+    public ResponseEntity<Employee> saveEmployee(@RequestBody EmployeeRequest request) {
+
+        return new ResponseEntity<>(employeeService.saveEmployee(request), HttpStatus.CREATED);
 
     }
 }
