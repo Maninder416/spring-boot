@@ -1,0 +1,37 @@
+version: '2'
+services:
+
+  mysqldb:
+    image: "mysql:5.7"
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: silicon
+      MYSQL_USER: maninder
+      MYSQL_PASSWORD: maninder
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - kafka-stack-network
+
+
+  app:
+    image: spring-boot-mysql
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+    restart: on-failure
+    depends_on:
+      - mysqldb
+    ports:
+      - 9003:9003
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/silicon
+      SPRING_DATASOURCE_USERNAME: "maninder"
+      SPRING_DATASOURCE_PASSWORD: "maninder"
+    networks:
+      - kafka-stack-network
+
+networks:
+  kafka-stack-network:
+    driver: bridge
