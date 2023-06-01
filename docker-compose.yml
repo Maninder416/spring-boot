@@ -14,6 +14,16 @@ services:
     networks:
       - kafka-stack-network
 
+  splunk:
+    image: splunk/splunk:7.0.3
+    ports:
+      - 8000:8000
+      - 8088:8088
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=admin
+
+
 networks:
   kafka-stack-network:
     driver: bridge
