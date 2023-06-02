@@ -39,6 +39,8 @@ comes into picture.
 We can use docker-compose splunk for local testing. After running this, we need to configure
 some settings that are required for our spring boot app to send logs over splunk because how
 our spring boot application knows where to send all the details?
+We need following details for setup:
 
 ```
+![Alt Text](img/img_1.png)
 
