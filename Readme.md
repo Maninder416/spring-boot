@@ -43,4 +43,15 @@ We need following details for setup:
 
 ```
 ![Alt Text](img/img_1.png)
+![Alt Text](img/img_3.png)
+![Alt Text](img/img_4.png)
+![Alt Text](img/img_2.png)
+![Alt Text](img/img_5.png)
+![Alt Text](img/img_6.png)
+![Alt Text](img/img_7.png)
+![Alt Text](img/img_8.png)
+![Alt Text](img/img_9.png)
+![Alt Text](img/img_10.png)
+![Alt Text](img/img_11.png)
+
 
