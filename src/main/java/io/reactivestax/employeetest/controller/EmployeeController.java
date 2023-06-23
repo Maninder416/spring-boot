@@ -64,4 +64,11 @@ public class EmployeeController {
         return employeeService.updateEmployee(id, employee);
     }
 
+    @PatchMapping("/employees/{id}/{name}")
+    public Employee updateEmployeePartially(@PathVariable Long id, @PathVariable String name){
+        return employeeService.updateEmployeePartially(id,name);
+    }
+
+
+
 }

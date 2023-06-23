@@ -52,4 +52,13 @@ public class EmployeeService {
         }
         return employeeRepository.save(employee1);
     }
+
+    public Employee updateEmployeePartially(Long id, String name) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Employee employee1 = optionalEmployee.get();
+        if (optionalEmployee.isPresent()) {
+            employee1.setName(name);
+        }
+        return employeeRepository.save(employee1);
+    }
 }
