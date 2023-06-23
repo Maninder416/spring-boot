@@ -15,48 +15,53 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/employees")
-    public List<Employee> findAllEmployees(){
-        return employeeService.findAllEmployees();
-    }
-
     @PostMapping("/employees")
-    public Employee postEmployee(@RequestBody Employee employee){
-        System.out.println("Employee body: "+employee);
+    public Employee postEmployee(@RequestBody Employee employee) {
+        System.out.println("Employee body: " + employee);
         return employeeService.saveEmployee(employee);
 
     }
 
+    @GetMapping("/employees")
+    public List<Employee> findAllEmployees() {
+        return employeeService.findAllEmployees();
+    }
+
     @GetMapping("/employees/{id}")
-    public Optional<Employee> findEmployeeById(@PathVariable Long id){
+    public Optional<Employee> findEmployeeById(@PathVariable Long id) {
         return employeeService.findEmployeeById(id);
     }
 
     @DeleteMapping("/employees/{id}")
-    public void deleteEmployeeById(@PathVariable Long id){
-         employeeService.deleteEmployee(id);
+    public void deleteEmployeeById(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
     }
 
     @GetMapping("/salary")
-    public Map<Double,List<Employee>> employeeListWithSalary(){
+    public Map<Double, List<Employee>> employeeListWithSalary() {
         Map<Double, List<Employee>> collect = employeeService.findAllEmployees()
                 .stream()
-                .collect(Collectors.groupingBy(a->a.getSalary()));
+                .collect(Collectors.groupingBy(a -> a.getSalary()));
         return collect;
     }
 
     @GetMapping("/postalCode")
-    public Map<String,List<Employee>> employeeListByPostalCode(){
+    public Map<String, List<Employee>> employeeListByPostalCode() {
         return employeeService.findAllEmployees()
                 .stream()
-                .collect(Collectors.groupingBy(a->a.getPostalCode()));
+                .collect(Collectors.groupingBy(a -> a.getPostalCode()));
     }
 
     @GetMapping("/max")
-    public Employee highestEmployeeSalary(){
+    public Employee highestEmployeeSalary() {
         return employeeService.findAllEmployees()
                 .stream()
-                .max((a,b)-> (int) (a.getSalary()-b.getSalary())).get();
+                .max((a, b) -> (int) (a.getSalary() - b.getSalary())).get();
+    }
+
+    @PutMapping("/employees/{id}")
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        return employeeService.updateEmployee(id, employee);
     }
 
 }

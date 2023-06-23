@@ -16,28 +16,40 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public List<Employee> findAllEmployees(){
+    public List<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> findEmployeeById(Long id){
+    public Optional<Employee> findEmployeeById(Long id) {
         Optional<Employee> employeeId = employeeRepository.findById(id);
-        if(employeeId.isEmpty()){
-            throw new RuntimeException("Employee not found for id: "+employeeId);
+        if (employeeId.isEmpty()) {
+            throw new RuntimeException("Employee not found for id: " + employeeId);
         }
         return employeeId;
     }
 
-    public void deleteEmployee(Long id){
+    public void deleteEmployee(Long id) {
         Optional<Employee> employeeId = employeeRepository.findById(id);
-        if(employeeId.isEmpty()){
-            throw new RuntimeException("Employee not found for id: "+employeeId);
+        if (employeeId.isEmpty()) {
+            throw new RuntimeException("Employee not found for id: " + employeeId);
         }
         employeeRepository.deleteById(id);
 
     }
 
-    public Employee saveEmployee(Employee employee){
+    public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    public Employee updateEmployee(Long id, Employee employee) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Employee employee1 = optionalEmployee.get();
+        if (optionalEmployee.isPresent()) {
+            employee1.setName(employee.getName());
+            employee1.setPostalCode(employee.getPostalCode());
+            employee1.setSalary(employee.getSalary());
+
+        }
+        return employeeRepository.save(employee1);
     }
 }
