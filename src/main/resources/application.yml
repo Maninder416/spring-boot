@@ -5,13 +5,14 @@ spring:
   h2:
     console:
       enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
 
 logging:
   level:
     root: INFO
     io.reactivestax: DEBUG
+
 
