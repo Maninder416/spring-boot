@@ -16,7 +16,8 @@
 	<description>Demo project for Spring Boot</description>
     <modules>
         <module>eureka-server</module>
-    </modules>
+		<module>payment-service</module>
+	</modules>
     <properties>
 		<java.version>11</java.version>
 	</properties>
