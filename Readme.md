@@ -160,9 +160,13 @@ spring:
     name: PAYMENT-SERVICE
     
 4. hit the endpoints.       
+http://localhost:9003/payment
+http://localhost:9004/order-payment
+
+5. observe the trace of your request in zipkin dashboard:
 
 ```
-
+![Alt Text](image/img_2.png)
 
 
 
