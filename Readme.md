@@ -168,5 +168,46 @@ http://localhost:9004/order-payment
 ```
 ![Alt Text](image/img_2.png)
 
+### Config server
+
+```shell
+How to enable config server:
+1. add config server pom dependency along with spring cloud dependency.
+
+<dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+
+2. add this configuration: providing the configuration for repo.
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Maninder416/config-server
+          
+3. on client side, like order service:
+providing the config server host and profile.
 
 
+spring:
+  profiles:
+    active: default
+
+  application:
+    name: ORDER-SERVICE
+  config:
+    import: configserver:http://localhost:9005
+  cloud:
+    config:
+      profile: default          
+          
+          
+4. Now it will pick properties from yml file present in git.
+
+          
+```
