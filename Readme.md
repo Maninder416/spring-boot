@@ -79,7 +79,8 @@ spring:
     
 it is just saying that it is not a eureka client. it's server so we marked it false.
 5. default port for eureka server is : 8761
-6. On the client side, you need to add eureka client dependency:
+6. On the client side, you need to add eureka client dependency and add annotation
+called @EnableEurekaClient on spring boot application.
 
 <dependency>
 <groupId>org.springframework.cloud</groupId>
@@ -106,7 +107,7 @@ passing the eureka server hostname and saying that yes it is client.
 ```
 ![Alt Text](image/img.png)
 
-### zipkin and sleuth server configuration
+### what is zipkin and sleuth server.
 ```shell
 for monitoring the logs like when machine is connecting and give you what 
 response we use distributed tracing pattern to track it.
@@ -117,11 +118,51 @@ boiler plate code for it so people use it.
 ```
 ![Alt Text](image/img_1.png)
 
+### Configuration of it
 
+```shell
+1. added sleuth and zipkin dependency into order and payment service along
+with spring cloud dependency..
 
-
-how to run zipkin server:
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+        </dependency>
+            <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2021.0.5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+2. how to run zipkin server?
 copied the jar in zipkin-jar folder and run command:
-
 java -jar zipkin-server-2.12.9.jar
+
+3. add properties into yml file.
+
+spring:
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1.0
+  application:
+    name: PAYMENT-SERVICE
+    
+4. hit the endpoints.       
+
+```
+
+
+
+
