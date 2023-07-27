@@ -1,4 +1,4 @@
-### this branch we will learn to configure:
+### In this branch we will learn to configure:
 ```shell
 1. zipkin and sleuth
 2. config server
