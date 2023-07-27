@@ -106,6 +106,19 @@ passing the eureka server hostname and saying that yes it is client.
 ```
 ![Alt Text](image/img.png)
 
+### zipkin and sleuth server configuration
+```shell
+for monitoring the logs like when machine is connecting and give you what 
+response we use distributed tracing pattern to track it.
+
+So, spring cloud gives you all that features, and you don’t need to write any 
+boiler plate code for it so people use it. 
+
+```
+![Alt Text](image/img_1.png)
+
+
+
 
 how to run zipkin server:
 
