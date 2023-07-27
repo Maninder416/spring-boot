@@ -200,6 +200,7 @@ spring:
 3. on client side, like order service:
 providing the config server host and profile.
 
+
 spring:
   profiles:
     active: default
