@@ -1,2 +1,7 @@
-server:
-  port: 9004
+#server:
+#  port: 9004
+#  ssl:
+#    key-alias: https-example
+#    key-store-type: JKS
+#    key-password: dataguise
+#    key-store: /Users/manindersingh/Downloads/http-security/cert/http-example.jks
