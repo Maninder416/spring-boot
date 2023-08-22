@@ -7,3 +7,15 @@
 
 ```
 
+## With the help of query we are generating the self certificate.
+```shell
+keytool -genkey -alias https-example -storetype JKS -keyalg RSA -key
+size 2048 -validity 365 -keystore http-example.jks
+
+-genkey: generate key
+alias : name
+validity: 365 days
+size of certificate
+
+```
+![Alt Text](images/img.png)
