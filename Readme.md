@@ -20,8 +20,7 @@ size of certificate
 ```
 ![Alt Text](images/img.png)
 
-## After creating the certificate we need to add some configuration. Did it in application.properties having
-## some issues using application.yml file.
+## After creating the certificate we need to add some configuration. Did it in application.properties having some issues using application.yml file.
 
 ```shell
 # The format used for the keystore. It could be set to JKS in case it is a JKS file
