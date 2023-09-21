@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "8102e0d6-6409-465b-8557-759fe985b6d9",
+		"name": "mongo-db",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18625497"
+	},
+	"item": [
+		{
+			"name": "Post Book",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:9004/employees",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9003/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Book By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9003/books/650c63a92ff43376326fb72b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9003",
+					"path": [
+						"books",
+						"650c63a92ff43376326fb72b"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
