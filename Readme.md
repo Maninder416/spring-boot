@@ -6,5 +6,8 @@ Steps to run it:
 is for docker express for portal where you can see the mongo db portal.
 2. We did CRUD operations for mono db and we have used String type of id
 to generate unique id inside the book class as we cannot use int.
+3. Also wrote one API for mongoTemplate:
+With the help of mongoTemplate we can perform complex queries and execute aggregations along with CRUD operations.
+
 
 ```

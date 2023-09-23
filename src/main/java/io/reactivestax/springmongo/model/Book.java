@@ -11,9 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "Book")
 public class Book {
-
     @Id
     private String id;
     private String bookName;
     private String authorName;
+    private double price;
+    private int launchedYear;
 }
