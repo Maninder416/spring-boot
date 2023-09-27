@@ -5,11 +5,11 @@ services:
     image: "mysql:5.7"
     restart: always
     ports:
-      - 3307:3307
+      - 3307:3306
     environment:
-      MYSQL_DATABASE: javatechie
-      MYSQL_USER: query
-      MYSQL_PASSWORD: query
+      MYSQL_DATABASE: reading
+      MYSQL_USER: tester
+      MYSQL_PASSWORD: tester
       MYSQL_ROOT_PASSWORD: root
     networks:
       - kafka-stack-network2
