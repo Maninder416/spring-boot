@@ -1,4 +1,4 @@
-package io.reactivestax.query.entity;
+package io.reactivestax.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

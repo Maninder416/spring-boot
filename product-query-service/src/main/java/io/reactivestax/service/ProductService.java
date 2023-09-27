@@ -1,8 +1,8 @@
-package io.reactivestax.query.service;
+package io.reactivestax.service;
 
-import io.reactivestax.query.dto.ProductDto;
-import io.reactivestax.query.entity.Product;
-import io.reactivestax.query.repository.ProductRepository;
+import io.reactivestax.dto.ProductDto;
+import io.reactivestax.entity.Product;
+import io.reactivestax.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

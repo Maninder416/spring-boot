@@ -1,9 +1,9 @@
-package io.reactivestax.writeservice.service;
+package io.reactivestax.service;
 
-import io.reactivestax.writeservice.dto.ProductDto;
-import io.reactivestax.writeservice.entity.Product;
-import io.reactivestax.writeservice.event.ProductEvent;
-import io.reactivestax.writeservice.repository.ProductRepository;
+import io.reactivestax.dto.ProductDto;
+import io.reactivestax.event.ProductEvent;
+import io.reactivestax.repository.ProductRepository;
+import io.reactivestax.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

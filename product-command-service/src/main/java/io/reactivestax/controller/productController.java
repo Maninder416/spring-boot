@@ -1,8 +1,8 @@
-package io.reactivestax.writeservice.controller;
+package io.reactivestax.controller;
 
-import io.reactivestax.writeservice.dto.ProductDto;
-import io.reactivestax.writeservice.entity.Product;
-import io.reactivestax.writeservice.service.ProductService;
+import io.reactivestax.dto.ProductDto;
+import io.reactivestax.entity.Product;
+import io.reactivestax.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

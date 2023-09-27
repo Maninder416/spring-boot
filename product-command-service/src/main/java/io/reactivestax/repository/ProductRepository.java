@@ -1,6 +1,6 @@
-package io.reactivestax.writeservice.repository;
+package io.reactivestax.repository;
 
-import io.reactivestax.writeservice.entity.Product;
+import io.reactivestax.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

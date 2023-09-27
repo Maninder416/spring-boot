@@ -1,8 +1,8 @@
-package io.reactivestax.query.controller;
+package io.reactivestax.controller;
 
 
-import io.reactivestax.query.entity.Product;
-import io.reactivestax.query.service.ProductService;
+import io.reactivestax.entity.Product;
+import io.reactivestax.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

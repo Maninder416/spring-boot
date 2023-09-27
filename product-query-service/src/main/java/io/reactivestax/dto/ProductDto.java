@@ -1,7 +1,7 @@
-package io.reactivestax.query.dto;
+package io.reactivestax.dto;
 
-import io.reactivestax.query.entity.Product;
-import io.reactivestax.query.event.ProductEvent;
+import io.reactivestax.event.ProductEvent;
+import io.reactivestax.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

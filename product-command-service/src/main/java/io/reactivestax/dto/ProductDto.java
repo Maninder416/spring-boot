@@ -1,7 +1,7 @@
-package io.reactivestax.writeservice.dto;
+package io.reactivestax.dto;
 
-import io.reactivestax.writeservice.entity.Product;
-import io.reactivestax.writeservice.event.ProductEvent;
+import io.reactivestax.entity.Product;
+import io.reactivestax.event.ProductEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
