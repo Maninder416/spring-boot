@@ -1,5 +1,6 @@
 package io.reactivestax.writeservice.controller;
 
+import io.reactivestax.writeservice.dto.ProductDto;
 import io.reactivestax.writeservice.entity.Product;
 import io.reactivestax.writeservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,13 @@ public class productController {
     private ProductService productService;
 
     @PostMapping("/products")
-    public Product saveProduct(@RequestBody Product product){
-        return productService.createProduct(product);
+    public Product saveProduct(@RequestBody ProductDto productDto){
+        return productService.createProduct(productDto);
     }
 
     @PutMapping("/products/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product){
-        return productService.updateProduct(id, product);
+    public Product updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto){
+        return productService.updateProduct(id, productDto);
 
     }
 

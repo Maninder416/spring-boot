@@ -1,8 +1,12 @@
 package io.reactivestax.writeservice.service;
 
+import io.reactivestax.writeservice.dto.ProductDto;
 import io.reactivestax.writeservice.entity.Product;
+import io.reactivestax.writeservice.event.ProductEvent;
 import io.reactivestax.writeservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,20 +16,30 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    @Value("${spring.topic.name}")
+    private String topicName;
+
+    public Product createProduct(ProductDto product) {
+        Product saveProduct = productRepository.save(product.getProduct());
+        ProductDto productDto = new ProductDto(ProductEvent.PRODUCT_CREATED,saveProduct);
+        kafkaTemplate.send(topicName,productDto);
+        return productRepository.save(saveProduct);
     }
 
-    public Product updateProduct(Long id, Product product) {
+    public Product updateProduct(Long id, ProductDto productDto) {
         Optional<Product> byId = productRepository.findById(id);
         if (byId.isEmpty()) {
             throw new RuntimeException("Product does not found for id: " + id);
         }
         Product product1 = byId.get();
-        product1.setDescription(product.getDescription());
-        product1.setName(product.getName());
-        product1.setPrice(product.getPrice());
+        product1.setDescription(productDto.getProduct().getDescription());
+        product1.setName(productDto.getProduct().getName());
+        product1.setPrice(productDto.getProduct().getPrice());
+        ProductDto productDto1 = new ProductDto(ProductEvent.PRODUCT_UPDATED,product1);
+        kafkaTemplate.send(topicName,productDto1);
         return productRepository.save(product1);
     }
 
@@ -34,6 +48,8 @@ public class ProductService {
         if (byId.isEmpty()) {
             throw new RuntimeException("Product does not found for id: " + id);
         }
+        ProductDto productDto = new ProductDto(ProductEvent.PRODUCT_DELETED,byId.get());
+        kafkaTemplate.send(topicName,productDto);
         productRepository.deleteById(id);
     }
 }
