@@ -9,4 +9,6 @@
     <artifactId>product-command-service</artifactId>
     <name>Archetype - product-command-service</name>
     <url>http://maven.apache.org</url>
+    <dependencies>
+    </dependencies>
 </project>
