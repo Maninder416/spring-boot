@@ -1,0 +1,20 @@
+version: '2'
+services:
+
+  mysqldb:
+    image: "mysql:5.7"
+    restart: always
+    ports:
+      - 3307:3307
+    environment:
+      MYSQL_DATABASE: javatechie
+      MYSQL_USER: query
+      MYSQL_PASSWORD: query
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - kafka-stack-network2
+
+
+networks:
+  kafka-stack-network2:
+    driver: bridge
