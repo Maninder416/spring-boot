@@ -1,5 +1,6 @@
 package io.reactievstax.kafkaspring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,11 +8,19 @@ import lombok.Data;
 @Entity
 @Table(name = "employee")
 public class Employee {
-
     @Id
+    @JsonProperty("ID")
     private int empId;
+    @JsonProperty("EMP_NAME")
+    @Column(name = "EMP_NAME")
     private String employeeName;
+    @JsonProperty("AGE")
+    @Column(name = "AGE")
     private int age;
+    @JsonProperty("PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER")
     private int phoneNumber;
+    @JsonProperty("EMAIL_ADDRESS")
+    @Column(name = "EMAIL_ADDRESS")
     private String emailAddress;
 }
