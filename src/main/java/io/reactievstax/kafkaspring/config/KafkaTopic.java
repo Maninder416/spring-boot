@@ -10,8 +10,16 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopic {
 
     @Bean
-    public NewTopic creditLineDetailsTopic() {
+    public NewTopic employeeDetailsTopic() {
         return TopicBuilder.name(Topic.EMPLOYEE_TOPIC.getTopicName())
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic employeeAddressDetailsTopic() {
+        return TopicBuilder.name(Topic.ADDRESS_TOPIC.getTopicName())
                 .partitions(1)
                 .replicas(1)
                 .build();
