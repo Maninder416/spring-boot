@@ -2,6 +2,7 @@ package io.reactievstax.kafkaspring;
 
 import com.github.javafaker.Faker;
 import io.reactievstax.kafkaspring.service.DataGenerateService;
+import io.reactievstax.kafkaspring.stream.EmployeeDetailsAndAddressStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,9 @@ public class KafkaSpringApplication implements CommandLineRunner {
 	@Autowired
 	private DataGenerateService dataGenerateService;
 
+	@Autowired
+	private EmployeeDetailsAndAddressStream employeeDetailsAndAddressStream;
+
 	public static void main(String[] args) {
 		SpringApplication.run(KafkaSpringApplication.class, args);
 	}
@@ -25,5 +29,7 @@ public class KafkaSpringApplication implements CommandLineRunner {
 		System.out.println("calling this method");
 		dataGenerateService.generateEmployeeData();
 		dataGenerateService.generateEmployeeAddressData();
+		employeeDetailsAndAddressStream.employeeDetails();
+
 	}
 }

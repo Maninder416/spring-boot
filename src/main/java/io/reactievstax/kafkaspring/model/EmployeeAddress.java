@@ -9,7 +9,8 @@ import lombok.Data;
 @Data
 public class EmployeeAddress {
     @Id
-    @JsonProperty("ID")
+    @JsonProperty("EMP_ID")
+    @Column(name = "EMP_ID")
     private Integer empId;
     @JsonProperty("STREET_NAME")
     @Column(name = "STREET_NAME")

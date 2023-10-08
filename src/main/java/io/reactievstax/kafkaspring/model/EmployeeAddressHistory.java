@@ -5,12 +5,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Data;
 
 @Entity
 @Table(name = "EmployeeAddressHistory")
+@Data
+@Builder
 public class EmployeeAddressHistory {
     @Id
-    @JsonProperty("ID")
+    @JsonProperty("EMP_ID")
+    @Column(name = "EMP_ID")
     private int empId;
     @JsonProperty("EMP_NAME")
     @Column(name = "EMP_NAME")
