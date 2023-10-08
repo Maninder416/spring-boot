@@ -1,0 +1,5 @@
+FROM cnfldemos/cp-server-connect-datagen:0.6.0-7.3.0
+
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.3
+
+COPY ./jars/mysql-connector-java-8.0.29.jar /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/mysql-connector-java-8.0.29.jar
