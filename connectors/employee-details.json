@@ -1,0 +1,33 @@
+{
+  "name": "employee-details-2",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "task.max": "1",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schemas.enable": false,
+    "transforms": "createKey,setSchema",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.createKey.fields": "EMP_ID",
+    "transforms.setSchema.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+    "transforms.setSchema.schema.name": "silicon_Data",
+    "connection.url": "jdbc:mysql://mysqldb:3306/kafka",
+    "connection.user": "root",
+    "connection.password": "root",
+    "connection.attempts": "3",
+    "retry.backoff.ms": "5000",
+    "dialect.name": "MySqlDatabaseDialect",
+    "mode": "incrementing",
+    "incrementing.column.name": "EMP_ID",
+    "numeric.precision.mapping": true,
+    "numeric.mapping": "best_fit",
+    "query": "SELECT * from (select EMP_ID,EMP_NAME,AGE,PHONE_NUMBER,EMAIL_ADDRESS FROM employee) employee",
+    "table.type": "TABLE",
+    "poll.interval.ms": "5000",
+    "batch.max.rows": "5",
+    "topic.prefix": "employee_details",
+    "db.timezone": "America/Toronto"
+  }
+}

@@ -10,7 +10,7 @@ import lombok.Data;
 public class Employee {
     @Id
     @JsonProperty("ID")
-    private int empId;
+    private Integer empId;
     @JsonProperty("EMP_NAME")
     @Column(name = "EMP_NAME")
     private String employeeName;
@@ -19,7 +19,7 @@ public class Employee {
     private int age;
     @JsonProperty("PHONE_NUMBER")
     @Column(name = "PHONE_NUMBER")
-    private int phoneNumber;
+    private String phoneNumber;
     @JsonProperty("EMAIL_ADDRESS")
     @Column(name = "EMAIL_ADDRESS")
     private String emailAddress;
