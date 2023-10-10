@@ -58,7 +58,9 @@ WITH (
   'value.converter'='org.apache.kafka.connect.json.JsonConverter',
   'value.converter.schemas.enable' = false
 );
+```
 
+```shell
 6. After creating connectors, creating KTable using below mentioned command.
  a. connect to KSQL.
  b. run below command.
