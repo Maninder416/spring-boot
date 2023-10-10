@@ -60,6 +60,8 @@ WITH (
  a. connect to KSQL.
  b. run below command.
 
+```
+```shell
 
 CREATE TABLE employee
 (
@@ -74,9 +76,10 @@ CREATE TABLE employee
         VALUE_FORMAT = 'JSON', -- The format in which the data is written
         PARTITIONS = 1
         );
+          
+```
 
-
-
+```shell
 
 CREATE TABLE address
 (
@@ -94,9 +97,7 @@ CREATE TABLE address
         PARTITIONS = 1
         );
 
+```
 7. Now, when you have updated anything, data will send to topic and then merged using stream and send to next topic.
 
-
-
-```
 ![Alt Text](img/img_1.png)
