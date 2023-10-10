@@ -12,7 +12,6 @@ import lombok.Data;
 public class EmployeeAddressHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("emp_id")
     @Column(name = "EMP_ID")
     private Integer empId;
