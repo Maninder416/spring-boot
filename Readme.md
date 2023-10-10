@@ -43,8 +43,7 @@ curl http://localhost:8083/connectors/testing/MYSQL_SOURCE_CONNECTOR2 |jq
 
 ```shell
 
-CREATE
-SOURCE CONNECTOR mysql_source_connector2
+CREATE SOURCE CONNECTOR mysql_source_connector2
 WITH (
   'connector.class' = 'io.confluent.connect.jdbc.JdbcSourceConnector',
   'connection.url' = 'jdbc:mysql://mysqldb:3306/kafka',
