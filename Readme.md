@@ -39,6 +39,10 @@ curl http://localhost:8083/connectors/testing/MYSQL_SOURCE_CONNECTOR2 |jq
 
 5. if you want to create connectors using command line in KSQL:
 
+```
+
+```shell
+
 CREATE
 SOURCE CONNECTOR mysql_source_connector2
 WITH (
@@ -61,6 +65,7 @@ WITH (
  b. run below command.
 
 ```
+
 ```shell
 
 CREATE TABLE employee
