@@ -9,25 +9,26 @@ import lombok.Data;
 @Data
 public class EmployeeAddress {
     @Id
-    @JsonProperty("EMP_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("emp_id")
     @Column(name = "EMP_ID")
     private Integer empId;
-    @JsonProperty("STREET_NAME")
+    @JsonProperty("street_name")
     @Column(name = "STREET_NAME")
     private String streetName;
-    @JsonProperty("STREET_NUMBER")
+    @JsonProperty("street_number")
     @Column(name = "STREET_NUMBER")
     private int streetNumber;
-    @JsonProperty("POSTAL_CODE")
+    @JsonProperty("postal_code")
     @Column(name = "POSTAL_CODE")
     private String postalCode;
-    @JsonProperty("CITY_NAME")
+    @JsonProperty("city_name")
     @Column(name = "CITY_NAME")
     private String cityName;
-    @JsonProperty("STATE")
+    @JsonProperty("state")
     @Column(name = "STATE")
     private String state;
-    @JsonProperty("COUNTRY_NAME")
+    @JsonProperty("country_name")
     @Column(name = "COUNTRY_NAME")
     private String countryName;
 

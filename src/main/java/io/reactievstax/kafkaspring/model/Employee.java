@@ -9,19 +9,20 @@ import lombok.Data;
 @Table(name = "employee")
 public class Employee {
     @Id
-    @JsonProperty("EMP_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("emp_id")
     @Column(name = "EMP_ID")
     private Integer empId;
-    @JsonProperty("EMP_NAME")
+    @JsonProperty("emp_name")
     @Column(name = "EMP_NAME")
     private String employeeName;
-    @JsonProperty("AGE")
+    @JsonProperty("age")
     @Column(name = "AGE")
     private int age;
-    @JsonProperty("PHONE_NUMBER")
+    @JsonProperty("phone_number")
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
-    @JsonProperty("EMAIL_ADDRESS")
+    @JsonProperty("email_address")
     @Column(name = "EMAIL_ADDRESS")
     private String emailAddress;
 }

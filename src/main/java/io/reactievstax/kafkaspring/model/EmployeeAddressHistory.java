@@ -1,10 +1,7 @@
 package io.reactievstax.kafkaspring.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +11,7 @@ import lombok.Data;
 @Builder
 public class EmployeeAddressHistory {
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("EMP_ID")
     @Column(name = "EMP_ID")
     private int empId;

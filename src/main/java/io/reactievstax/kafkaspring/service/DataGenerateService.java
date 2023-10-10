@@ -27,7 +27,7 @@ public class DataGenerateService {
 
         for (int i= 1; i<=loopCount;i++) {
             Employee employee = new Employee();
-            employee.setEmpId(i);
+//            employee.setEmpId(i);
             employee.setEmployeeName(faker.name().fullName());
             employee.setAge(faker.number().numberBetween(1, 100));
             employee.setEmailAddress(faker.internet().emailAddress());
@@ -40,7 +40,7 @@ public class DataGenerateService {
     public String generateEmployeeAddressData(){
         for (int i= 1; i<=loopCount;i++) {
             EmployeeAddress employeeAddress = new EmployeeAddress();
-            employeeAddress.setEmpId(i);
+//            employeeAddress.setEmpId(i);
             employeeAddress.setState(faker.address().state());
             employeeAddress.setCountryName(faker.address().country());
             employeeAddress.setStreetName(faker.address().streetName());

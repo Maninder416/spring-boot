@@ -25,4 +25,12 @@ public class KafkaTopic {
                 .build();
     }
 
+    @Bean
+    public NewTopic employeeAddressDetailsFinalOutputTopic() {
+        return TopicBuilder.name(Topic.EMPLOYEE_ADDRESS_TOPIC.getTopicName())
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
 }

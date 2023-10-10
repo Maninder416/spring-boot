@@ -9,7 +9,7 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_DATABASE: silicon
+      MYSQL_DATABASE: kafka
       MYSQL_USER: maninder
       MYSQL_PASSWORD: maninder
       MYSQL_ROOT_PASSWORD: root

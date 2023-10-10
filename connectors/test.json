@@ -1,5 +1,5 @@
 {
-  "name": "employee-details-2",
+  "name": "testing",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
     "connection.url": "jdbc:mysql://mysqldb:3306/kafka",
@@ -15,10 +15,11 @@
     "value.converter.schemas.enable": false,
     "connection.attempts": "3",
     "retry.backoff.ms": "5000",
-    "transforms":"createKey,extractInt",
-    "transforms.createKey.type":"org.apache.kafka.connect.transforms.ValueToKey",
-    "transforms.createKey.fields":"emp_id",
-    "transforms.extractInt.type":"org.apache.kafka.connect.transforms.ExtractField$Key",
-    "transforms.extractInt.field":"emp_id"
+    "transforms": "ksqlExtractString,ksqlCreateKey",
+    "transforms.ksqlExtractString.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.ksqlCreateKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.ksqlCreateKey.fields": "emp_id",
+    "transforms.ksqlExtractString.field": "emp_id"
   }
 }
+
