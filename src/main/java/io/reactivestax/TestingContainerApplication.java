@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestingContainerApplication {
 
-	@GetMapping("/test")
+	@GetMapping("/")
 	public String get(){
-		return "hello";
+		return "hello team. I am deploying application";
 	}
 
 	public static void main(String[] args) {
