@@ -1,4 +1,18 @@
-### spring app running on container to run integration test cases
+### Deployed spring boot app on open shift.
+
+```shell
+First of all, we cannot deploy this spring boot app on open shift because it is child
+branch and when we deploy to open shift we need to provide the repository path
+like this:
+https://github.com/Maninder416/spring-boot.git
+
+and by default, it will deploy the main branch code on your open shift not this child branch code.
+
+1. So if you want to deploy this code to open shift, merge your code to main branch.
+
+
+
+```
 
 
 ```shell
