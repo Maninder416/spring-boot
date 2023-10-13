@@ -15,14 +15,44 @@ and by default, it will deploy the main branch code on your open shift not this 
 # Steps to deploy spring boot app on open-shift:
 
 ```shell
-1. create open-shift account. will give you 30 days trail:
+1. Create open-shift account. will give you 30 days trail:
 https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com/topology/ns/maninder78143-dev?view=graph
 
-2. username and password are shared on reactivestax personal slack chat.
-3. choose the developer option.
+2. Username and password are shared on reactivestax personal slack chat.
+3. Choose the developer option.
 
 ```
 ![Alt Text](image/img.png)
+
+```shell
+4. Then click on "+Add" option and select "Git repository, import from git option".
+
+```
+![Alt Text](image/img_1.png)
+
+```shell
+5. Then you need to pass the repository here.
+```
+![Alt Text](image/img_2.png)
+
+```shell
+6. Provide the basic information like which target port you want to access and app name.
+
+```
+![Alt Text](image/img_3.png)
+
+```shell
+7. Click on create button and it will deploy your application and give you url.
+8. Wait until penguin logo come and then try to access your application.
+```
+![Alt Text](image/img_4.png)
+
+![Alt Text](image/img_5.png)
+
+
+
+
+
 
 
 ```shell
