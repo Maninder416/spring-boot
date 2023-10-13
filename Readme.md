@@ -37,6 +37,7 @@ https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com/topo
 
 ```shell
 6. Provide the basic information like which target port you want to access and app name.
+6a. Make sure the port should be same on which your spring boot app is working on local. I tried with different port but no revision was getting generated.
 
 ```
 ![Alt Text](image/img_3.png)
