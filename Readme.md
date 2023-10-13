@@ -10,9 +10,19 @@ and by default, it will deploy the main branch code on your open shift not this 
 
 1. So if you want to deploy this code to open shift, merge your code to main branch.
 
+```
 
+# Steps to deploy spring boot app on open-shift:
+
+```shell
+1. create open-shift account. will give you 30 days trail:
+https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com/topology/ns/maninder78143-dev?view=graph
+
+2. username and password are shared on reactivestax personal slack chat.
+3. choose the developer option.
 
 ```
+![Alt Text](image/img.png)
 
 
 ```shell
