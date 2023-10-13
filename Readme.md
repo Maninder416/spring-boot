@@ -49,11 +49,11 @@ https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com/topo
 
 ![Alt Text](image/img_5.png)
 
+```shell
+9. These were the steps, that we need to follow to deploy app on open-shift.
+```
 
-
-
-
-
+# About this spring boot application.
 
 ```shell
 If our spring boot app is running with docker-compose mysql,
