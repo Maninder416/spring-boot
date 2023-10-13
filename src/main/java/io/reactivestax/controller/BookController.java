@@ -24,6 +24,11 @@ public class BookController {
         return bookRepository.findAll();
     }
 
+    @GetMapping("/")
+    public String get(){
+        return "hello team. I am deploying application";
+    }
+
     @SneakyThrows
     @GetMapping("/{id}")
     public Book findBook(@PathVariable int id) throws Exception {
