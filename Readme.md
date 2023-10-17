@@ -1,109 +1,48 @@
-# Spring boot with kafka:
+# Spring boot with kafka filter: We are applying filter on messages like if distance greater than 100.
 
 ```shell
 Steps to run spring boot app:
 1. Run docker compose.
 2. Run the spring boot app.
-3. login to "http://localhost:9021/" and add connectors.
-4. upload the connectors that are placed inside the connectors folder.
-5. We have created the service layer which is generating the data.
-6. creating 2 classes(Employee and Address) and using stream we have merged 2 topics into one.
-7. Basic diagram of this project.
+3. Login to control center and observe the topic:
+    http://localhost:9021
+    topic name: car-location-topic
 
-```
-![Alt Text](img/img.png)
-
-```shell
-1. These connectors will automatically upload the table data into topic.
-2. Using stream, we have combined this data and send to next topic.
-
-```
-
-# How to create kTable in KSQL:
-
-```shell
-
-Command to connect KSQL:
-1. From command line, connect KSQL:
-ksql http://localhost:8088
-
-2. Set autooffset reset:
-SET 'auto.offset.reset' = 'earliest';
-
-3. Command to list connectors:
-
-show connectors;
-
-4. How to check config of connectors:
-curl http://localhost:8083/connectors/testing/MYSQL_SOURCE_CONNECTOR2 |jq
-
-5. if you want to create connectors using command line in KSQL:
+4. The app will send message automatically because we have configured a scheduler class.
+5. Below code is doing filtering of message.   
 
 ```
 
 ```shell
 
-CREATE SOURCE CONNECTOR mysql_source_connector2
-WITH (
-  'connector.class' = 'io.confluent.connect.jdbc.JdbcSourceConnector',
-  'connection.url' = 'jdbc:mysql://mysqldb:3306/kafka',
-  'connection.user' = 'root',
-  'connection.password' = 'root',
-  'table.whitelist' = 'employee',
-  'mode' = 'incrementing',
-  'incrementing.column.name' = 'emp_id',
-  'topic.prefix' = '',
-  'key'='emp_id',
-  'key.converter'='org.apache.kafka.connect.storage.StringConverter',
-  'value.converter'='org.apache.kafka.connect.json.JsonConverter',
-  'value.converter.schemas.enable' = false
-);
+    @Bean(name = "farLocationContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<Object,Object>
+    farLocationContainerFactory(ConcurrentKafkaListenerContainerFactoryConfigurer
+                                configurer){
+        var factory = new ConcurrentKafkaListenerContainerFactory<Object,Object>();
+        configurer.configure(factory,consumerFactory());
+        factory.setRecordFilterStrategy(new RecordFilterStrategy<Object, Object>() {
+            @Override
+            public boolean filter(ConsumerRecord<Object, Object> consumerRecord) {
+                try{
+                    CarLocation carLocation= objectMapper.readValue(consumerRecord.value().toString(),
+                            CarLocation.class);
+                    return carLocation.getDistance()<=100;
+                }catch (JsonProcessingException e){
+                    return false;
+                }
+            }
+        });
+        return factory;
+    }
+
 ```
 
 ```shell
-6. After creating connectors, creating KTable using below mentioned command.
- a. connect to KSQL.
- b. run below command.
-
+6. Line no: 24, above code, we are using "recordFilterStrategy" to filter the message.
+7. If the filter method returns true, the record is discarded, and if it returns false,
+    the record is passed to the listener. So, according to this, you will see only records in which distance
+    greater than 100.
+    
+8. Check the logs and observe the result.    
 ```
-
-```shell
-
-CREATE TABLE employee
-(
-    emp_id          VARCHAR PRIMARY KEY,
-    emp_name        VARCHAR(50),
-    email_address   VARCHAR(50),
-    age VARCHAR(50),
-    phone_number VARCHAR(50)
-)
-    WITH (
-        KAFKA_TOPIC = 'employee', -- The topic in which we added the players
-        VALUE_FORMAT = 'JSON', -- The format in which the data is written
-        PARTITIONS = 1
-        );
-          
-```
-
-```shell
-
-CREATE TABLE address
-(
-    emp_id          VARCHAR PRIMARY KEY,
-    street_number        VARCHAR(50),
-    city_name   VARCHAR(50),
-    country_name   VARCHAR(50),
-    postal_code   VARCHAR(50),
-    state VARCHAR(50),
-    street_name VARCHAR(50)
-)
-    WITH (
-        KAFKA_TOPIC = 'address', -- The topic in which we added the players
-        VALUE_FORMAT = 'JSON', -- The format in which the data is written
-        PARTITIONS = 1
-        );
-
-```
-7. Now, when you have updated anything, data will send to topic and then merged using stream and send to next topic.
-
-![Alt Text](img/img_1.png)

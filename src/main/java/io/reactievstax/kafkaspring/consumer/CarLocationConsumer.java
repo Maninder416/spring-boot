@@ -24,7 +24,7 @@ public class CarLocationConsumer {
             containerFactory = "farLocationContainerFactory")
     public void listenFar(String message) throws JsonProcessingException {
         var carLocation = objectMapper.readValue(message, CarLocation.class);
-        log.info("***** Listen far : {} ",carLocation);
+        log.info("***** filter messages are ***** : {} ",carLocation);
 
     }
 
