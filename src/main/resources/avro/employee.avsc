@@ -1,0 +1,42 @@
+{
+  "namespace": "ca.sunlife.kafka.avro.dto",
+  "type": "record",
+  "name": "Employee",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "dob",
+      "type": "string"
+    },
+    {
+      "name": "age",
+      "type": "int"
+    },
+    {
+      "name": "address",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "postalCode",
+      "type": "string",
+      "default": ""
+    }
+  ]
+}
