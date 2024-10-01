@@ -14,6 +14,12 @@ public class OrderController {
     @Value("${server.port}")
     private String port;
 
+    /**
+     * This property is picked from Github using config server.
+     */
+    @Value("${application.message}")
+    private String message;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -22,6 +28,7 @@ public class OrderController {
         log.info("***** port is: *****: "+port);
         String url = "http://PAYMENT-SERVICE/payment";
         log.info("****** Invoking payment method ******");
+        log.info("***** message here is ****: "+message);
         return restTemplate.getForObject(url, String.class);
     }
 }
