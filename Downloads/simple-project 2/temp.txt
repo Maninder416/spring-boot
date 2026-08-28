@@ -4,29 +4,20 @@ import sys
 from pathlib import Path
 
 
-# ---------------------------------------------------------
-# CONFIGURATION
-# ---------------------------------------------------------
+# =========================================================
+# BASIC HELPERS
+# =========================================================
 
-AGGREGATE_FUNCTIONS = [
-    "SUM",
-    "COUNT",
-    "AVG",
-    "MIN",
-    "MAX"
-]
+def normalize_space(text):
+    return re.sub(r"\s+", " ", text).strip()
 
-
-# ---------------------------------------------------------
-# HELPER FUNCTIONS
-# ---------------------------------------------------------
 
 def clean_sql(sql):
     """
-    Remove comments while keeping the SQL structure.
+    Removes SQL comments but keeps the SQL structure.
     """
 
-    # Remove /* ... */ comments
+    # Remove /* ... */
     sql = re.sub(
         r"/\*.*?\*/",
         " ",
@@ -45,63 +36,243 @@ def clean_sql(sql):
     return sql
 
 
-def normalize_space(text):
-    return re.sub(r"\s+", " ", text).strip()
-
-
-# ---------------------------------------------------------
-# EXTRACT CTEs
-# ---------------------------------------------------------
-
-def extract_ctes(sql):
+def clean_identifier(name):
     """
-    Finds CTE names such as:
-
-    WITH collateral_data AS (...)
-    , asset AS (...)
-    , transactions AS (...)
+    Removes common quote characters from identifiers.
     """
 
-    pattern = re.compile(
-        r"(?:WITH|,)\s*([A-Za-z_][A-Za-z0-9_$]*)\s+AS\s*\(",
+    if not name:
+        return ""
+
+    return (
+        name
+        .replace('"', '')
+        .replace("`", "")
+        .replace("[", "")
+        .replace("]", "")
+        .strip()
+    )
+
+
+# =========================================================
+# FIND MATCHING PARENTHESIS
+# =========================================================
+
+def find_matching_parenthesis(text, open_pos):
+    """
+    Given position of '(' find matching ')'.
+
+    Handles nested parentheses and quoted strings.
+    """
+
+    depth = 0
+
+    in_single_quote = False
+    in_double_quote = False
+
+    i = open_pos
+
+    while i < len(text):
+
+        char = text[i]
+
+        # Handle single quotes
+        if char == "'" and not in_double_quote:
+
+            # SQL escaped quote ''
+            if (
+                in_single_quote
+                and i + 1 < len(text)
+                and text[i + 1] == "'"
+            ):
+                i += 2
+                continue
+
+            in_single_quote = not in_single_quote
+
+        # Handle double quotes
+        elif char == '"' and not in_single_quote:
+            in_double_quote = not in_double_quote
+
+        elif not in_single_quote and not in_double_quote:
+
+            if char == "(":
+                depth += 1
+
+            elif char == ")":
+                depth -= 1
+
+                if depth == 0:
+                    return i
+
+        i += 1
+
+    return -1
+
+
+# =========================================================
+# EXTRACT TOP-LEVEL CTEs
+# =========================================================
+
+def extract_cte_blocks(sql):
+    """
+    Extracts top-level CTEs.
+
+    Returns:
+
+    [
+        {
+            "name": "credit_txn_base",
+            "body": "SELECT ...",
+            "start": 100,
+            "end": 500
+        }
+    ]
+    """
+
+    results = []
+
+    # Find WITH
+    with_match = re.search(
+        r"\bWITH\b",
+        sql,
         re.IGNORECASE
     )
 
-    ctes = []
+    if not with_match:
+        return results
 
-    for match in pattern.finditer(sql):
-        name = match.group(1)
+    pos = with_match.end()
 
-        if name.upper() not in [
-            "SELECT",
-            "FROM",
-            "WHERE",
-            "JOIN"
-        ]:
-            ctes.append(name)
+    while pos < len(sql):
 
-    return list(dict.fromkeys(ctes))
+        # Skip whitespace and comma
+        while (
+            pos < len(sql)
+            and (
+                sql[pos].isspace()
+                or sql[pos] == ","
+            )
+        ):
+            pos += 1
+
+        # Match CTE name
+        name_match = re.match(
+            r'(["`\[]?[A-Za-z_][A-Za-z0-9_$]*["`\]]?)',
+            sql[pos:]
+        )
+
+        if not name_match:
+            break
+
+        cte_name = clean_identifier(
+            name_match.group(1)
+        )
+
+        cte_name_start = pos
+
+        pos += name_match.end()
+
+        # Optional column list:
+        # cte_name(col1,col2) AS (...)
+        while pos < len(sql) and sql[pos].isspace():
+            pos += 1
+
+        if pos < len(sql) and sql[pos] == "(":
+
+            column_end = find_matching_parenthesis(
+                sql,
+                pos
+            )
+
+            if column_end == -1:
+                break
+
+            pos = column_end + 1
+
+        # Skip whitespace
+        while pos < len(sql) and sql[pos].isspace():
+            pos += 1
+
+        # Must have AS
+        as_match = re.match(
+            r"AS\b",
+            sql[pos:],
+            re.IGNORECASE
+        )
+
+        if not as_match:
+            break
+
+        pos += as_match.end()
+
+        while pos < len(sql) and sql[pos].isspace():
+            pos += 1
+
+        if pos >= len(sql) or sql[pos] != "(":
+            break
+
+        body_start_paren = pos
+
+        body_end_paren = find_matching_parenthesis(
+            sql,
+            body_start_paren
+        )
+
+        if body_end_paren == -1:
+            break
+
+        body = sql[
+            body_start_paren + 1:
+            body_end_paren
+        ]
+
+        results.append({
+            "name": cte_name,
+            "body": body,
+            "start": cte_name_start,
+            "end": body_end_paren
+        })
+
+        pos = body_end_paren + 1
+
+        # After a CTE:
+        # either ", next_cte AS (...)"
+        # or final SELECT
+
+        temp = pos
+
+        while temp < len(sql) and sql[temp].isspace():
+            temp += 1
+
+        if temp < len(sql) and sql[temp] == ",":
+            pos = temp + 1
+            continue
+
+        break
+
+    return results
 
 
-# ---------------------------------------------------------
-# EXTRACT TABLES
-# ---------------------------------------------------------
+# =========================================================
+# EXTRACT FROM/JOIN REFERENCES FROM A CTE
+# =========================================================
 
-def extract_tables(sql):
+def extract_references(cte_body):
     """
-    Finds objects appearing after FROM or JOIN.
+    Finds FROM and JOIN references.
 
     Example:
 
-    FROM schema1.customer_dim c
-
-    LEFT JOIN schema2.account_dim acc
+    FROM schema.table t
+    LEFT JOIN Customer_Dim c
     """
 
     pattern = re.compile(
-        r"\b(?:FROM|JOIN)\s+"
-        r"([A-Za-z0-9_$#.\[\]\"`]+)"
-        r"(?:\s+(?:AS\s+)?([A-Za-z_][A-Za-z0-9_$]*))?",
+        r"\b(FROM|JOIN)\s+"
+        r'(["`\[\]A-Za-z0-9_$#.]+)'
+        r"(?:\s+(?:AS\s+)?"
+        r"([A-Za-z_][A-Za-z0-9_$]*))?",
         re.IGNORECASE
     )
 
@@ -119,59 +290,50 @@ def extract_tables(sql):
         "UNION",
         "HAVING",
         "CROSS",
-        "LIMIT"
+        "LIMIT",
+        "QUALIFY"
     }
 
     results = []
 
-    for match in pattern.finditer(sql):
+    for match in pattern.finditer(cte_body):
 
-        table = match.group(1).strip()
-        alias = match.group(2)
+        source_type = match.group(1).upper()
 
-        # Ignore subqueries: FROM (
-        if table == "(":
-            continue
-
-        if alias and alias.upper() in invalid_aliases:
-            alias = ""
-
-        results.append({
-            "table": table,
-            "alias": alias or ""
-        })
-
-    # Remove duplicates
-    unique = []
-
-    seen = set()
-
-    for item in results:
-
-        key = (
-            item["table"].lower(),
-            item["alias"].lower()
+        obj = clean_identifier(
+            match.group(2)
         )
 
-        if key not in seen:
-            seen.add(key)
-            unique.append(item)
+        alias = match.group(3) or ""
 
-    return unique
+        if alias.upper() in invalid_aliases:
+            alias = ""
+
+        # Ignore accidental SQL keywords
+        if obj.upper() in {
+            "SELECT",
+            "WHERE",
+            "GROUP",
+            "ORDER"
+        }:
+            continue
+
+        results.append({
+            "source_type": source_type,
+            "object_name": obj,
+            "alias": alias
+        })
+
+    return results
 
 
-# ---------------------------------------------------------
-# EXTRACT JOINS
-# ---------------------------------------------------------
+# =========================================================
+# EXTRACT JOINS WITH CONDITIONS
+# =========================================================
 
-def extract_joins(sql):
+def extract_joins(cte_body):
     """
-    Finds joins and captures the ON condition.
-
-    Example:
-
-    LEFT JOIN schema.account_dim acc
-        ON acc.cpi = collateral_data.source_account_number
+    Extract joins and ON conditions inside one CTE.
     """
 
     pattern = re.compile(
@@ -182,150 +344,155 @@ def extract_joins(sql):
         r"INNER|"
         r"CROSS"
         r")?\s*JOIN\s+"
-        r"([A-Za-z0-9_$#.\[\]\"`]+)"
-        r"(?:\s+(?:AS\s+)?([A-Za-z_][A-Za-z0-9_$]*))?"
-        r"\s+ON\s+"
-        r"(.*?)"
+        r'(["`\[\]A-Za-z0-9_$#.]+)'
+        r"(?:\s+(?:AS\s+)?"
+        r"([A-Za-z_][A-Za-z0-9_$]*))?"
+        r"(?:\s+ON\s+(.*?))?"
         r"(?="
-        r"\b(?:LEFT|RIGHT|FULL|INNER|CROSS)?\s*JOIN\b|"
+        r"\b(?:LEFT|RIGHT|FULL|INNER|CROSS)"
+        r"(?:\s+OUTER)?\s+JOIN\b|"
+        r"\bJOIN\b|"
         r"\bWHERE\b|"
         r"\bGROUP\s+BY\b|"
         r"\bHAVING\b|"
+        r"\bQUALIFY\b|"
         r"\bUNION\b|"
         r"\bORDER\s+BY\b|"
-        r"\)|$"
+        r"$"
         r")",
         re.IGNORECASE | re.DOTALL
     )
 
-    joins = []
+    results = []
 
-    for match in pattern.finditer(sql):
+    for match in pattern.finditer(cte_body):
 
         join_type = match.group(1)
 
         if join_type:
-            join_type = normalize_space(join_type).upper()
+            join_type = normalize_space(
+                join_type
+            ).upper()
         else:
             join_type = "INNER"
 
-        table = match.group(2)
-        alias = match.group(3) or ""
-
-        condition = normalize_space(match.group(4))
-
-        joins.append({
-            "join_type": join_type,
-            "table": table,
-            "alias": alias,
-            "condition": condition
-        })
-
-    return joins
-
-
-# ---------------------------------------------------------
-# EXTRACT GROUP BY
-# ---------------------------------------------------------
-
-def extract_group_bys(sql):
-
-    pattern = re.compile(
-        r"\bGROUP\s+BY\s+(.*?)"
-        r"(?="
-        r"\bHAVING\b|"
-        r"\bORDER\s+BY\b|"
-        r"\bUNION\b|"
-        r"\)|$"
-        r")",
-        re.IGNORECASE | re.DOTALL
-    )
-
-    groups = []
-
-    for match in pattern.finditer(sql):
-        groups.append(
-            normalize_space(match.group(1))
+        object_name = clean_identifier(
+            match.group(2)
         )
 
-    return groups
+        alias = match.group(3) or ""
+
+        condition = match.group(4) or ""
+
+        results.append({
+            "join_type": join_type,
+            "object_name": object_name,
+            "alias": alias,
+            "condition": normalize_space(
+                condition
+            )
+        })
+
+    return results
 
 
-# ---------------------------------------------------------
-# EXTRACT WHERE CLAUSES
-# ---------------------------------------------------------
+# =========================================================
+# EXTRACT FILTERS
+# =========================================================
 
-def extract_where_clauses(sql):
+def extract_where_clauses(cte_body):
 
     pattern = re.compile(
         r"\bWHERE\s+(.*?)"
         r"(?="
         r"\bGROUP\s+BY\b|"
         r"\bHAVING\b|"
+        r"\bQUALIFY\b|"
         r"\bORDER\s+BY\b|"
         r"\bUNION\b|"
-        r"\)|$"
+        r"$"
         r")",
         re.IGNORECASE | re.DOTALL
     )
 
-    filters = []
-
-    for match in pattern.finditer(sql):
-        filters.append(
-            normalize_space(match.group(1))
-        )
-
-    return filters
+    return [
+        normalize_space(match.group(1))
+        for match in pattern.finditer(cte_body)
+    ]
 
 
-# ---------------------------------------------------------
+# =========================================================
+# EXTRACT GROUP BY
+# =========================================================
+
+def extract_group_bys(cte_body):
+
+    pattern = re.compile(
+        r"\bGROUP\s+BY\s+(.*?)"
+        r"(?="
+        r"\bHAVING\b|"
+        r"\bQUALIFY\b|"
+        r"\bORDER\s+BY\b|"
+        r"\bUNION\b|"
+        r"$"
+        r")",
+        re.IGNORECASE | re.DOTALL
+    )
+
+    return [
+        normalize_space(match.group(1))
+        for match in pattern.finditer(cte_body)
+    ]
+
+
+# =========================================================
 # AGGREGATIONS
-# ---------------------------------------------------------
+# =========================================================
 
-def extract_aggregations(sql):
+def extract_aggregations(cte_body):
+
+    pattern = re.compile(
+        r"\b("
+        r"SUM|COUNT|AVG|MIN|MAX"
+        r")\s*\((.*?)\)",
+        re.IGNORECASE | re.DOTALL
+    )
 
     results = []
 
-    for function in AGGREGATE_FUNCTIONS:
+    for match in pattern.finditer(cte_body):
 
-        pattern = re.compile(
-            rf"\b{function}\s*\((.*?)\)",
-            re.IGNORECASE | re.DOTALL
+        function = match.group(1).upper()
+
+        expression = normalize_space(
+            match.group(2)
         )
 
-        for match in pattern.finditer(sql):
+        results.append(
+            f"{function}({expression})"
+        )
 
-            expression = normalize_space(
-                match.group(1)
-            )
-
-            results.append(
-                f"{function}({expression})"
-            )
-
-    return results
+    return list(dict.fromkeys(results))
 
 
-# ---------------------------------------------------------
-# UNION COUNTS
-# ---------------------------------------------------------
+# =========================================================
+# UNION DETECTION
+# =========================================================
 
-def count_unions(sql):
+def extract_unions(cte_body):
 
     union_all = len(
         re.findall(
             r"\bUNION\s+ALL\b",
-            sql,
+            cte_body,
             re.IGNORECASE
         )
     )
 
-    # UNION but not UNION ALL
     union = len(
         re.findall(
             r"\bUNION\b(?!\s+ALL)",
-            sql,
+            cte_body,
             re.IGNORECASE
         )
     )
@@ -333,84 +500,142 @@ def count_unions(sql):
     return union, union_all
 
 
-# ---------------------------------------------------------
-# BUILD SIMPLE FLOW DIAGRAM
-# ---------------------------------------------------------
+# =========================================================
+# IDENTIFY TABLE vs CTE DEPENDENCY
+# =========================================================
 
-def build_mermaid(ctes, tables, joins):
+def classify_dependencies(cte_blocks):
 
-    lines = [
-        "flowchart TD",
-        ""
-    ]
+    cte_names = {
+        cte["name"].lower()
+        for cte in cte_blocks
+    }
 
-    # Table nodes
-    for index, item in enumerate(tables):
+    dependencies = []
 
-        table = item["table"]
+    for cte in cte_blocks:
 
-        safe_label = table.replace('"', "'")
+        parent_cte = cte["name"]
 
-        lines.append(
-            f'T{index}["{safe_label}"]'
+        refs = extract_references(
+            cte["body"]
         )
 
-    lines.append("")
+        seen = set()
 
-    # CTE nodes
-    for index, cte in enumerate(ctes):
+        for ref in refs:
 
-        lines.append(
-            f'C{index}["CTE: {cte}"]'
-        )
+            obj = ref["object_name"]
 
-    lines.append("")
+            key = obj.lower()
 
-    # Basic source -> first CTE relationship
-    if ctes:
+            if key in cte_names:
+                object_type = "CTE"
+            else:
+                object_type = "TABLE"
 
-        for index, item in enumerate(tables):
-
-            lines.append(
-                f"T{index} --> C0"
+            dep_key = (
+                parent_cte.lower(),
+                key
             )
 
-        # Connect CTEs sequentially.
-        # This is an initial high-level diagram only.
-        for index in range(len(ctes) - 1):
+            if dep_key in seen:
+                continue
 
-            lines.append(
-                f"C{index} --> C{index + 1}"
-            )
+            seen.add(dep_key)
 
-        lines.append("")
+            dependencies.append({
+                "parent_cte": parent_cte,
+                "depends_on": obj,
+                "object_type": object_type,
+                "alias": ref["alias"],
+                "reference_type":
+                    ref["source_type"]
+            })
 
-        lines.append(
-            f'C{len(ctes)}["FINAL SELECT"]'
+    return dependencies
+
+
+# =========================================================
+# FINAL SELECT DEPENDENCIES
+# =========================================================
+
+def extract_final_sql(sql, cte_blocks):
+
+    if not cte_blocks:
+        return sql
+
+    end_position = cte_blocks[-1]["end"] + 1
+
+    return sql[end_position:]
+
+
+def extract_final_dependencies(
+    final_sql,
+    cte_names
+):
+
+    refs = extract_references(
+        final_sql
+    )
+
+    results = []
+
+    seen = set()
+
+    cte_lower = {
+        x.lower()
+        for x in cte_names
+    }
+
+    for ref in refs:
+
+        obj = ref["object_name"]
+
+        key = obj.lower()
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+
+        object_type = (
+            "CTE"
+            if key in cte_lower
+            else "TABLE"
         )
 
-        lines.append(
-            f"C{len(ctes)-1} --> C{len(ctes)}"
-        )
+        results.append({
+            "parent_cte": "FINAL_SELECT",
+            "depends_on": obj,
+            "object_type": object_type,
+            "alias": ref["alias"],
+            "reference_type":
+                ref["source_type"]
+        })
 
-    return "\n".join(lines)
+    return results
 
 
-# ---------------------------------------------------------
-# WRITE CSV FILE
-# ---------------------------------------------------------
+# =========================================================
+# CSV WRITER
+# =========================================================
 
-def write_csv(filename, headers, rows):
+def write_csv(
+    filename,
+    headers,
+    rows
+):
 
     with open(
         filename,
         "w",
         newline="",
         encoding="utf-8"
-    ) as file:
+    ) as f:
 
         writer = csv.DictWriter(
-            file,
+            f,
             fieldnames=headers
         )
 
@@ -419,9 +644,213 @@ def write_csv(filename, headers, rows):
         writer.writerows(rows)
 
 
-# ---------------------------------------------------------
-# MAIN PROGRAM
-# ---------------------------------------------------------
+# =========================================================
+# MERMAID HELPERS
+# =========================================================
+
+def mermaid_id(text):
+    """
+    Create safe Mermaid node ID.
+    """
+
+    return re.sub(
+        r"[^A-Za-z0-9_]",
+        "_",
+        text
+    )
+
+
+def mermaid_label(text):
+
+    return (
+        text
+        .replace('"', "'")
+        .replace("\n", " ")
+    )
+
+
+# =========================================================
+# BUILD MERMAID DIAGRAM
+# =========================================================
+
+def build_mermaid(
+    dependencies,
+    joins
+):
+
+    lines = []
+
+    lines.append(
+        "flowchart TD"
+    )
+
+    lines.append("")
+
+    all_ctes = set()
+
+    all_tables = set()
+
+    for dep in dependencies:
+
+        if dep["parent_cte"] != "FINAL_SELECT":
+            all_ctes.add(
+                dep["parent_cte"]
+            )
+
+        if dep["object_type"] == "CTE":
+            all_ctes.add(
+                dep["depends_on"]
+            )
+
+        else:
+            all_tables.add(
+                dep["depends_on"]
+            )
+
+    # -------------------------------------
+    # Tables subgraph
+    # -------------------------------------
+
+    lines.append(
+        'subgraph TABLES["Source Tables"]'
+    )
+
+    for table in sorted(all_tables):
+
+        node = "T_" + mermaid_id(
+            table
+        )
+
+        label = mermaid_label(
+            table
+        )
+
+        lines.append(
+            f'    {node}["{label}"]'
+        )
+
+    lines.append("end")
+
+    lines.append("")
+
+    # -------------------------------------
+    # CTE subgraph
+    # -------------------------------------
+
+    lines.append(
+        'subgraph CTES["CTEs"]'
+    )
+
+    for cte in sorted(all_ctes):
+
+        node = "C_" + mermaid_id(
+            cte
+        )
+
+        label = mermaid_label(
+            cte
+        )
+
+        lines.append(
+            f'    {node}["{label}"]'
+        )
+
+    lines.append("end")
+
+    lines.append("")
+
+    lines.append(
+        'FINAL["FINAL SELECT"]'
+    )
+
+    lines.append("")
+
+    # -------------------------------------
+    # Dependency arrows
+    # -------------------------------------
+
+    join_lookup = {}
+
+    for join in joins:
+
+        key = (
+            join["parent_cte"].lower(),
+            join["object_name"].lower()
+        )
+
+        if key not in join_lookup:
+            join_lookup[key] = join[
+                "join_type"
+            ]
+
+    for dep in dependencies:
+
+        parent = dep["parent_cte"]
+
+        source = dep["depends_on"]
+
+        if dep["object_type"] == "CTE":
+
+            source_node = (
+                "C_" +
+                mermaid_id(source)
+            )
+
+        else:
+
+            source_node = (
+                "T_" +
+                mermaid_id(source)
+            )
+
+        if parent == "FINAL_SELECT":
+
+            target_node = "FINAL"
+
+        else:
+
+            target_node = (
+                "C_" +
+                mermaid_id(parent)
+            )
+
+        join_key = (
+            parent.lower(),
+            source.lower()
+        )
+
+        relationship = ""
+
+        if join_key in join_lookup:
+            relationship = (
+                join_lookup[join_key]
+                + " JOIN"
+            )
+
+        elif dep["reference_type"] == "FROM":
+            relationship = "FROM"
+
+        if relationship:
+
+            lines.append(
+                f'{source_node} '
+                f'-->|"{relationship}"| '
+                f'{target_node}'
+            )
+
+        else:
+
+            lines.append(
+                f"{source_node} --> "
+                f"{target_node}"
+            )
+
+    return "\n".join(lines)
+
+
+# =========================================================
+# MAIN
+# =========================================================
 
 def main():
 
@@ -429,345 +858,383 @@ def main():
 
         print("")
         print("Usage:")
-        print("python analyze_sql.py your_query.sql")
+        print(
+            "python analyze_sql_v2.py "
+            "your_query.sql"
+        )
         print("")
 
         return
 
-    sql_file = Path(sys.argv[1])
+    sql_file = Path(
+        sys.argv[1]
+    )
 
     if not sql_file.exists():
 
         print(
-            f"File not found: {sql_file}"
+            f"File not found: "
+            f"{sql_file}"
         )
 
         return
 
     print("")
-    print("Reading SQL...")
-    print(sql_file)
-    print("")
+    print(
+        f"Reading: "
+        f"{sql_file.name}"
+    )
 
     sql = sql_file.read_text(
         encoding="utf-8",
         errors="ignore"
     )
 
-    cleaned_sql = clean_sql(sql)
-
-    ctes = extract_ctes(cleaned_sql)
-
-    tables = extract_tables(cleaned_sql)
-
-    joins = extract_joins(cleaned_sql)
-
-    group_bys = extract_group_bys(cleaned_sql)
-
-    where_clauses = extract_where_clauses(
-        cleaned_sql
+    sql = clean_sql(
+        sql
     )
 
-    aggregations = extract_aggregations(
-        cleaned_sql
+    # -----------------------------------------
+    # Extract CTEs
+    # -----------------------------------------
+
+    cte_blocks = extract_cte_blocks(
+        sql
     )
 
-    union_count, union_all_count = count_unions(
-        cleaned_sql
+    print(
+        f"CTEs found: "
+        f"{len(cte_blocks)}"
     )
 
-    output_dir = sql_file.parent / "sql_analysis"
+    cte_names = [
+        x["name"]
+        for x in cte_blocks
+    ]
+
+    # -----------------------------------------
+    # Dependencies
+    # -----------------------------------------
+
+    dependencies = classify_dependencies(
+        cte_blocks
+    )
+
+    # -----------------------------------------
+    # Final SELECT
+    # -----------------------------------------
+
+    final_sql = extract_final_sql(
+        sql,
+        cte_blocks
+    )
+
+    final_dependencies = (
+        extract_final_dependencies(
+            final_sql,
+            cte_names
+        )
+    )
+
+    dependencies.extend(
+        final_dependencies
+    )
+
+    # -----------------------------------------
+    # Detailed joins
+    # -----------------------------------------
+
+    all_joins = []
+
+    for cte in cte_blocks:
+
+        joins = extract_joins(
+            cte["body"]
+        )
+
+        for join in joins:
+
+            all_joins.append({
+                "parent_cte":
+                    cte["name"],
+                "join_type":
+                    join["join_type"],
+                "object_name":
+                    join["object_name"],
+                "alias":
+                    join["alias"],
+                "condition":
+                    join["condition"]
+            })
+
+    # -----------------------------------------
+    # CTE analysis
+    # -----------------------------------------
+
+    cte_analysis = []
+
+    for index, cte in enumerate(
+        cte_blocks,
+        start=1
+    ):
+
+        where_clauses = (
+            extract_where_clauses(
+                cte["body"]
+            )
+        )
+
+        group_bys = (
+            extract_group_bys(
+                cte["body"]
+            )
+        )
+
+        aggregations = (
+            extract_aggregations(
+                cte["body"]
+            )
+        )
+
+        union_count, union_all_count = (
+            extract_unions(
+                cte["body"]
+            )
+        )
+
+        cte_analysis.append({
+            "sequence": index,
+            "cte_name":
+                cte["name"],
+            "where_count":
+                len(where_clauses),
+            "group_by_count":
+                len(group_bys),
+            "aggregation_count":
+                len(aggregations),
+            "union_count":
+                union_count,
+            "union_all_count":
+                union_all_count
+        })
+
+    # -----------------------------------------
+    # Output directory
+    # -----------------------------------------
+
+    output_dir = (
+        sql_file.parent /
+        "sql_analysis_v2"
+    )
 
     output_dir.mkdir(
         exist_ok=True
     )
 
     # -----------------------------------------
-    # Write tables.csv
+    # Write CTE list
     # -----------------------------------------
 
     write_csv(
-        output_dir / "tables.csv",
-        ["table", "alias"],
-        tables
-    )
-
-    # -----------------------------------------
-    # Write joins.csv
-    # -----------------------------------------
-
-    write_csv(
-        output_dir / "joins.csv",
-        [
-            "join_type",
-            "table",
-            "alias",
-            "condition"
-        ],
-        joins
-    )
-
-    # -----------------------------------------
-    # Write CTE CSV
-    # -----------------------------------------
-
-    cte_rows = [
-        {
-            "sequence": i + 1,
-            "cte_name": name
-        }
-        for i, name in enumerate(ctes)
-    ]
-
-    write_csv(
-        output_dir / "ctes.csv",
+        output_dir /
+        "ctes.csv",
         [
             "sequence",
             "cte_name"
         ],
-        cte_rows
+        [
+            {
+                "sequence": i + 1,
+                "cte_name": name
+            }
+            for i, name
+            in enumerate(cte_names)
+        ]
     )
 
     # -----------------------------------------
-    # Write summary
+    # Write dependencies
+    # -----------------------------------------
+
+    write_csv(
+        output_dir /
+        "cte_dependencies.csv",
+        [
+            "parent_cte",
+            "depends_on",
+            "object_type",
+            "alias",
+            "reference_type"
+        ],
+        dependencies
+    )
+
+    # -----------------------------------------
+    # Write joins
+    # -----------------------------------------
+
+    write_csv(
+        output_dir /
+        "joins_by_cte.csv",
+        [
+            "parent_cte",
+            "join_type",
+            "object_name",
+            "alias",
+            "condition"
+        ],
+        all_joins
+    )
+
+    # -----------------------------------------
+    # Write CTE analysis
+    # -----------------------------------------
+
+    write_csv(
+        output_dir /
+        "cte_analysis.csv",
+        [
+            "sequence",
+            "cte_name",
+            "where_count",
+            "group_by_count",
+            "aggregation_count",
+            "union_count",
+            "union_all_count"
+        ],
+        cte_analysis
+    )
+
+    # -----------------------------------------
+    # Split each CTE into separate SQL file
+    # -----------------------------------------
+
+    cte_folder = (
+        output_dir /
+        "cte_sql"
+    )
+
+    cte_folder.mkdir(
+        exist_ok=True
+    )
+
+    for index, cte in enumerate(
+        cte_blocks,
+        start=1
+    ):
+
+        safe_name = re.sub(
+            r"[^A-Za-z0-9_-]",
+            "_",
+            cte["name"]
+        )
+
+        filename = (
+            cte_folder /
+            f"{index:02d}_"
+            f"{safe_name}.sql"
+        )
+
+        filename.write_text(
+            cte["body"],
+            encoding="utf-8"
+        )
+
+    # -----------------------------------------
+    # Mermaid
+    # -----------------------------------------
+
+    diagram = build_mermaid(
+        dependencies,
+        all_joins
+    )
+
+    (
+        output_dir /
+        "flow_diagram.mmd"
+    ).write_text(
+        diagram,
+        encoding="utf-8"
+    )
+
+    # -----------------------------------------
+    # Summary TXT
     # -----------------------------------------
 
     summary_file = (
-        output_dir / "sql_analysis.txt"
+        output_dir /
+        "summary.txt"
     )
 
     with summary_file.open(
         "w",
         encoding="utf-8"
-    ) as file:
+    ) as f:
 
-        file.write(
-            "====================================\n"
+        f.write(
+            "SQL ANALYSIS VERSION 2\n"
         )
 
-        file.write(
-            "SQL QUERY ANALYSIS\n"
+        f.write(
+            "======================\n\n"
         )
 
-        file.write(
-            "====================================\n\n"
+        f.write(
+            f"CTEs found: "
+            f"{len(cte_blocks)}\n"
         )
 
-        file.write(
-            f"SQL file: {sql_file.name}\n"
+        f.write(
+            f"Dependencies found: "
+            f"{len(dependencies)}\n"
         )
 
-        file.write(
-            f"SQL characters: {len(sql):,}\n"
+        f.write(
+            f"Joins found: "
+            f"{len(all_joins)}\n\n"
         )
 
-        file.write(
-            f"CTEs found: {len(ctes)}\n"
+        f.write(
+            "CTE ORDER\n"
         )
 
-        file.write(
-            f"Table references found: {len(tables)}\n"
+        f.write(
+            "---------\n"
         )
 
-        file.write(
-            f"JOINs found: {len(joins)}\n"
-        )
-
-        file.write(
-            f"WHERE clauses found: "
-            f"{len(where_clauses)}\n"
-        )
-
-        file.write(
-            f"GROUP BY clauses found: "
-            f"{len(group_bys)}\n"
-        )
-
-        file.write(
-            f"Aggregations found: "
-            f"{len(aggregations)}\n"
-        )
-
-        file.write(
-            f"UNION: {union_count}\n"
-        )
-
-        file.write(
-            f"UNION ALL: {union_all_count}\n"
-        )
-
-        file.write("\n\n")
-
-        # CTEs
-        file.write(
-            "====================================\n"
-        )
-
-        file.write("CTEs\n")
-
-        file.write(
-            "====================================\n\n"
-        )
-
-        for i, cte in enumerate(
-            ctes,
+        for index, name in enumerate(
+            cte_names,
             start=1
         ):
 
-            file.write(
-                f"{i}. {cte}\n"
+            f.write(
+                f"{index}. {name}\n"
             )
 
-        # Tables
-        file.write("\n\n")
-
-        file.write(
-            "====================================\n"
+        f.write(
+            "\n\nDEPENDENCIES\n"
         )
 
-        file.write("TABLES\n")
-
-        file.write(
-            "====================================\n\n"
+        f.write(
+            "------------\n"
         )
 
-        for item in tables:
+        for dep in dependencies:
 
-            file.write(
-                f"Table : {item['table']}\n"
-            )
-
-            file.write(
-                f"Alias : {item['alias']}\n\n"
-            )
-
-        # Joins
-        file.write("\n")
-
-        file.write(
-            "====================================\n"
-        )
-
-        file.write("JOINS\n")
-
-        file.write(
-            "====================================\n\n"
-        )
-
-        for i, join in enumerate(
-            joins,
-            start=1
-        ):
-
-            file.write(
-                f"JOIN {i}\n"
-            )
-
-            file.write(
-                f"Type      : "
-                f"{join['join_type']}\n"
-            )
-
-            file.write(
-                f"Table     : "
-                f"{join['table']}\n"
-            )
-
-            file.write(
-                f"Alias     : "
-                f"{join['alias']}\n"
-            )
-
-            file.write(
-                f"Condition : "
-                f"{join['condition']}\n"
-            )
-
-            file.write("\n")
-
-        # Filters
-        file.write("\n")
-
-        file.write(
-            "====================================\n"
-        )
-
-        file.write("WHERE FILTERS\n")
-
-        file.write(
-            "====================================\n\n"
-        )
-
-        for i, condition in enumerate(
-            where_clauses,
-            start=1
-        ):
-
-            file.write(
-                f"{i}. {condition}\n\n"
-            )
-
-        # Group By
-        file.write(
-            "====================================\n"
-        )
-
-        file.write("GROUP BY\n")
-
-        file.write(
-            "====================================\n\n"
-        )
-
-        for i, group in enumerate(
-            group_bys,
-            start=1
-        ):
-
-            file.write(
-                f"{i}. {group}\n\n"
-            )
-
-        # Aggregations
-        file.write(
-            "====================================\n"
-        )
-
-        file.write("AGGREGATIONS\n")
-
-        file.write(
-            "====================================\n\n"
-        )
-
-        for i, agg in enumerate(
-            aggregations,
-            start=1
-        ):
-
-            file.write(
-                f"{i}. {agg}\n"
+            f.write(
+                f"{dep['depends_on']} "
+                f"--> "
+                f"{dep['parent_cte']} "
+                f"[{dep['object_type']}]\n"
             )
 
     # -----------------------------------------
-    # Mermaid flow diagram
+    # Done
     # -----------------------------------------
 
-    diagram = build_mermaid(
-        ctes,
-        tables,
-        joins
-    )
-
-    diagram_file = (
-        output_dir / "flow_diagram.mmd"
-    )
-
-    diagram_file.write_text(
-        diagram,
-        encoding="utf-8"
-    )
-
+    print("")
     print(
-        "Analysis completed successfully."
+        "Analysis completed."
     )
 
     print("")
@@ -780,14 +1247,37 @@ def main():
     )
 
     print("")
+    print(
+        "Files generated:"
+    )
 
-    print("Generated files:")
+    print(
+        "1. ctes.csv"
+    )
 
-    print("  1. sql_analysis.txt")
-    print("  2. tables.csv")
-    print("  3. joins.csv")
-    print("  4. ctes.csv")
-    print("  5. flow_diagram.mmd")
+    print(
+        "2. cte_dependencies.csv"
+    )
+
+    print(
+        "3. joins_by_cte.csv"
+    )
+
+    print(
+        "4. cte_analysis.csv"
+    )
+
+    print(
+        "5. flow_diagram.mmd"
+    )
+
+    print(
+        "6. summary.txt"
+    )
+
+    print(
+        "7. cte_sql folder"
+    )
 
     print("")
 
